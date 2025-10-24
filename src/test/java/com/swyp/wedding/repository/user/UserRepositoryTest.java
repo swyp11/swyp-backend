@@ -24,6 +24,8 @@ class UserRepositoryTest {
     @Test
     void saveAndFindTest() {
         // given
+        String testId = "testUserId";
+        String testPassword = "testPassword";
         String testName = "test";
         LocalDate testBirth = LocalDate.of(2025, 10, 19);
         String testPhoneNumber = "010-1111-1111";
@@ -32,6 +34,8 @@ class UserRepositoryTest {
         UserEnum testAuth = UserEnum.USER;
 
         User user = User.builder()
+                .userId(testId)
+                .password(testPassword)
                 .name(testName)
                 .birth(testBirth)
                 .phoneNumber(testPhoneNumber)
@@ -46,6 +50,8 @@ class UserRepositoryTest {
         User result = userRepository.findById(user.getId()).get();
 
         assertThat(result).isNotNull();
+        assertThat(result.getUserId()).isEqualTo(user.getUserId());
+        assertThat(result.getPassword()).isEqualTo(user.getPassword());
         assertThat(result.getName()).isEqualTo(user.getName());
         assertThat(result.getBirth()).isEqualTo(user.getBirth());
         assertThat(result.getPhoneNumber()).isEqualTo(user.getPhoneNumber());
