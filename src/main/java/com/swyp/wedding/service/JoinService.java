@@ -4,6 +4,7 @@ import com.swyp.wedding.dto.user.UserRequest;
 import com.swyp.wedding.entity.user.User;
 import com.swyp.wedding.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import com.swyp.wedding.entity.user.UserEnum;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,7 @@ public class JoinService {
                 .phoneNumber(userRequest.getPhoneNumber())
                 .address(userRequest.getAddress())
                 .birth(userRequest.getBirth())
-                //.auth(UserEnum.USER)
+                .auth(UserEnum.USER)
                 .build();
 
 
