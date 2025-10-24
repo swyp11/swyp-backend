@@ -1,12 +1,13 @@
-package com.swyp.wedding.domain.user.repository;
+package com.swyp.wedding.repository.user;
 
-import com.swyp.wedding.domain.user.entity.User;
-import com.swyp.wedding.domain.user.entity.UserEnum;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import com.swyp.wedding.entity.user.User;
+import com.swyp.wedding.entity.user.UserEnum;
 
 import java.time.LocalDate;
 

@@ -1,12 +1,13 @@
-package com.swyp.wedding.domain.user.dto;
+package com.swyp.wedding.dto.user;
 
-import com.swyp.wedding.domain.user.entity.User;
-import com.swyp.wedding.domain.user.entity.UserEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 
 import java.time.LocalDate;
+
+import com.swyp.wedding.entity.user.User;
+import com.swyp.wedding.entity.user.UserEnum;
 
 @Data
 public class UserRequest {
