@@ -1,9 +1,11 @@
-package com.swyp.wedding.domain.user.dto;
+package com.swyp.wedding.dto.user;
 
-import com.swyp.wedding.domain.user.entity.User;
-import com.swyp.wedding.domain.user.entity.UserEnum;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import com.swyp.wedding.dto.user.UserRequest;
+import com.swyp.wedding.entity.user.User;
+import com.swyp.wedding.entity.user.UserEnum;
 
 import java.time.LocalDate;
 

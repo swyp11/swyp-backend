@@ -1,9 +1,12 @@
-package com.swyp.wedding.domain.user.entity;
+package com.swyp.wedding.entity.user;
 
 import jakarta.persistence.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import com.swyp.wedding.entity.user.User;
+import com.swyp.wedding.entity.user.UserEnum;
 
 import java.time.LocalDate;
 import java.util.Date;
