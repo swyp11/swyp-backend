@@ -12,6 +12,8 @@ import com.swyp.wedding.entity.user.UserEnum;
 @Data
 public class UserRequest {
     private Long id;
+    private String userId;
+    private String password;
     private String name;
     private LocalDate birth;
     private String phoneNumber;
@@ -21,6 +23,8 @@ public class UserRequest {
 
     public User toEntity() {
         return User.builder()
+                .userId(userId)
+                .password(password)
                 .name(name)
                 .birth(birth)
                 .phoneNumber(phoneNumber)

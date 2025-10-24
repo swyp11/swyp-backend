@@ -18,6 +18,8 @@ class UserRequestTest {
     @Test
     void test() {
         // given
+        String testId = "testUserId";
+        String testPassword = "testPassword";
         String testName = "test";
         LocalDate testBirth = LocalDate.of(2025, 10, 19);
         String testPhoneNumber = "010-1111-1111";
@@ -26,6 +28,8 @@ class UserRequestTest {
         UserEnum testAuth = UserEnum.USER;
 
         UserRequest request = new UserRequest();
+        request.setUserId(testId);
+        request.setPassword(testPassword);
         request.setName(testName);
         request.setBirth(testBirth);
         request.setPhoneNumber(testPhoneNumber);
@@ -37,6 +41,8 @@ class UserRequestTest {
         User user = request.toEntity();
 
         // then
+        assertThat(user.getUserId()).isEqualTo(testId);
+        assertThat(user.getPassword()).isEqualTo(testPassword);
         assertThat(user.getName()).isEqualTo(request.getName());
         assertThat(user.getBirth()).isEqualTo(request.getBirth());
         assertThat(user.getPhoneNumber()).isEqualTo(request.getPhoneNumber());
