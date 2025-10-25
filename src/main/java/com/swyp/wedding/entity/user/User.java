@@ -1,4 +1,4 @@
-package com.swyp.wedding.domain.user.entity;
+package com.swyp.wedding.entity.user;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,6 +16,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String userId;
+
+    private String password;
 
     private String name;
 
