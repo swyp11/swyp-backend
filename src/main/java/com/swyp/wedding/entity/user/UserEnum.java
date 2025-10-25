@@ -1,4 +1,4 @@
-package com.swyp.wedding.domain.user.entity;
+package com.swyp.wedding.entity.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

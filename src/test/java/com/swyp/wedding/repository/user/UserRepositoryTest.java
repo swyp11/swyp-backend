@@ -1,12 +1,13 @@
-package com.swyp.wedding.domain.user.repository;
+package com.swyp.wedding.repository.user;
 
-import com.swyp.wedding.domain.user.entity.User;
-import com.swyp.wedding.domain.user.entity.UserEnum;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import com.swyp.wedding.entity.user.User;
+import com.swyp.wedding.entity.user.UserEnum;
 
 import java.time.LocalDate;
 
@@ -23,6 +24,8 @@ class UserRepositoryTest {
     @Test
     void saveAndFindTest() {
         // given
+        String testId = "testUserId";
+        String testPassword = "testPassword";
         String testName = "test";
         LocalDate testBirth = LocalDate.of(2025, 10, 19);
         String testPhoneNumber = "010-1111-1111";
@@ -31,6 +34,8 @@ class UserRepositoryTest {
         UserEnum testAuth = UserEnum.USER;
 
         User user = User.builder()
+                .userId(testId)
+                .password(testPassword)
                 .name(testName)
                 .birth(testBirth)
                 .phoneNumber(testPhoneNumber)
@@ -45,6 +50,8 @@ class UserRepositoryTest {
         User result = userRepository.findById(user.getId()).get();
 
         assertThat(result).isNotNull();
+        assertThat(result.getUserId()).isEqualTo(user.getUserId());
+        assertThat(result.getPassword()).isEqualTo(user.getPassword());
         assertThat(result.getName()).isEqualTo(user.getName());
         assertThat(result.getBirth()).isEqualTo(user.getBirth());
         assertThat(result.getPhoneNumber()).isEqualTo(user.getPhoneNumber());
