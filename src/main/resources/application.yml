@@ -1,10 +1,9 @@
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url: 'jdbc:h2:mem:tmp'   # H2 DB ?? ?? (In-Memory Mode)
-    #url: 'jdbc:h2:~/test'    # H2 DB ?? ?? (Embedded Mode)
-    username: user
-    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   h2:
     console:
