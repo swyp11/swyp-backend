@@ -8,10 +8,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
@@ -64,12 +66,27 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     //로그인 실패시 실행하는 메소드
+    //💡response가 이미 commit 되어있는 상태에서는 sendError()가 무시됨. 그러니까 커밋 전에! 에러내보내기!!!!💡
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
-        System.out.println(" 로그인 실패: " + failed.getMessage());
+
+        if (!response.isCommitted()) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+
+        String message;
+        if (failed instanceof BadCredentialsException) {
+            message = "비밀번호가 올바르지 않습니다.";
+        } else if (failed instanceof UsernameNotFoundException) {
+            message = "존재하지 않는 사용자입니다.";
+        } else {
+            message = "로그인 실패: " + failed.getMessage();
+        }
+
+        response.getWriter().write("{\"error\": \"" + message + "\"}");
+        response.getWriter().flush(); //-> 해당 시점에서 commit 확정
+
+        System.out.println("로그인 실패: " + message);
+        }
     }
-
-
-
-
 }

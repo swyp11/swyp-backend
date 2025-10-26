@@ -23,13 +23,29 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        // 로그인 요청은 JWT 검사 안 함
+        String path = request.getRequestURI();
+        System.out.println("🔎 Request URI = " + request.getRequestURI());
+
+        // 💡jwt 검증을 받아야 하는 api를 제외한 부분 -> 즉 지금의 user의 경우 jwt 검증을 받아야함.
+        // TODO 나중에 API 정할 때 변경하기
+        if(!path.startsWith("/api/**") && !path.startsWith("/user") ){
+            filterChain.doFilter(request,response);
+            return;
+        }
+
+        //-> 여기 부터가 jwt token 검증
         //request에서 Authorization 헤더를 찾음
         String authorization= request.getHeader("Authorization");
 
+        System.out.println("JwtFilter에서 헤더에 Authorization이 있는지 확인!");
+        System.out.println("JwtFilter header Authorization : " + authorization);
         //헤더에 없으면 쿠키에서 찾기(OAuth2의 경우 jwt를 쿠키에 저장하기때문에 확인 필요
         if(authorization == null){
+            System.out.println( "쿠키 전달 : " + request.getCookies());
              if(request.getCookies() != null){
                  for(Cookie cookie : request.getCookies()){
+                     System.out.println(cookie.getName() + " = " + cookie.getValue());
                      if(cookie.getName().equals("Authorization")) {
                          authorization = "Bearer " + cookie.getValue();
                          System.out.println("✅ 쿠키에서 토큰 발견!");

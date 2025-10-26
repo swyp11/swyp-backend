@@ -1,10 +1,12 @@
 package com.swyp.wedding.config;
 
+import com.swyp.wedding.handler.CustomOAuth2FailureHandler;
 import com.swyp.wedding.handler.CustomOAuth2SuccessHandler;
 import com.swyp.wedding.security.jwt.JwtAuthenticationFilter;
 import com.swyp.wedding.security.jwt.JwtFilter;
 import com.swyp.wedding.security.jwt.JwtUtil;
 import com.swyp.wedding.service.CustomOAuth2UserService;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +29,7 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final CustomOAuth2UserService customOAuthUserService;
     private final CustomOAuth2SuccessHandler customSuccessHandler;
+    private final CustomOAuth2FailureHandler customOAuth2FailureHandler;
 
     //AuthenticationManager Bean 등록
     @Bean
@@ -68,7 +71,7 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/login", "/join").permitAll()
+                        .requestMatchers("/", "/login", "/join" ,"/home", "/logout","/oauth2/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         //권한 확인 용
                         .requestMatchers("/user").hasRole("USER")
@@ -90,7 +93,25 @@ public class SecurityConfig {
                 .oauth2Login((oauth)-> oauth
                         .userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
                                 .userService(customOAuthUserService)))
-                        .successHandler(customSuccessHandler));
+                        .successHandler(customSuccessHandler)
+                        .failureHandler(customOAuth2FailureHandler));
+
+        // logout
+        http.logout(logout -> logout
+                .logoutUrl("/logout") // 로그아웃 요청 URL
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    // ✅ JWT 쿠키 삭제
+                    Cookie cookie = new Cookie("Authorization", null);
+                    cookie.setPath("/");
+                    cookie.setMaxAge(0);
+                    response.addCookie(cookie);
+
+                    // ✅ 로그인 페이지로 리다이렉트
+                    response.sendRedirect("/login");
+                })
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+        );
 
 
         //세션 설정💡
