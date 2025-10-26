@@ -46,6 +46,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     return userRepository.save(newUser);
                 });
 
+        System.out.println("CustomOAuth2UserService 클래스의 성공 확인용 " + user.getEmail()); // -> 사용자 확인용
         return new CustomOAuth2User(user); // -> DB에서 가져온 User 엔티티
     }
 }
