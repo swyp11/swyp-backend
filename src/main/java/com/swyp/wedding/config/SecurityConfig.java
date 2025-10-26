@@ -1,8 +1,10 @@
 package com.swyp.wedding.config;
 
+import com.swyp.wedding.handler.CustomOAuth2SuccessHandler;
 import com.swyp.wedding.security.jwt.JwtAuthenticationFilter;
 import com.swyp.wedding.security.jwt.JwtFilter;
 import com.swyp.wedding.security.jwt.JwtUtil;
+import com.swyp.wedding.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +25,8 @@ public class SecurityConfig {
     //AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
+    private final CustomOAuth2UserService customOAuthUserService;
+    private final CustomOAuth2SuccessHandler customSuccessHandler;
 
     //AuthenticationManager Bean 등록
     @Bean
@@ -79,6 +83,14 @@ public class SecurityConfig {
         //필터 추가 JwtAuthenticationFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
         http
                 .addFilterAt(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+
+
+        //oauth2
+        http
+                .oauth2Login((oauth)-> oauth
+                        .userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
+                                .userService(customOAuthUserService)))
+                        .successHandler(customSuccessHandler));
 
 
         //세션 설정💡
