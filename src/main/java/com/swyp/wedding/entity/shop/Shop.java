@@ -27,8 +27,8 @@ public class Shop {
     @Column(name = "phone", length = 20)
     private String phone;
 
-    @Column(name = "instagram", length = 100)
-    private String instagram;
+    @Column(name = "sns", length = 100)
+    private String sns;
 
     @Column(name = "website", length = 100)
     private String website;
