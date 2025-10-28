@@ -18,38 +18,38 @@ public class Dress {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "dress_color", length = 50)
-    private String dressColor;
+    @Column(name = "color", length = 50)
+    private String color;
 
-    @Column(name = "body_shape", length = 50)
-    private String bodyShape;
+    @Column(name = "shape", length = 50)
+    private String shape;
 
-    @Column(name = "dress_price", length = 50)
-    private String dressPrice;
+    @Column(name = "price_range", length = 50)
+    private String priceRange;
 
-    @Column(name = "dress_length", length = 10)
-    private String dressLength;
+    @Column(name = "length", length = 10)
+    private String length;
 
-    @Column(name = "dress_season", length = 50)
-    private String dressSeason;
+    @Column(name = "season", length = 50)
+    private String season;
 
-    @Column(name = "dress_brand", length = 50)
-    private String dressBrand;
+    @Column(name = "brand", length = 50)
+    private String brand;
 
-    @Column(name = "dress_designer", length = 50)
-    private String dressDesigner;
+    @Column(name = "designer", length = 50)
+    private String designer;
 
-    @Column(name = "dress_type", length = 50)
-    private String dressType;
+    @Column(name = "type", length = 50)
+    private String type;
 
-    @Column(name = "dress_neckline", length = 50)
-    private String dressNeckline;
+    @Column(name = "neck_line", length = 50)
+    private String neckLine;
 
-    @Column(name = "dress_mood", length = 50)
-    private String dressMood;
+    @Column(name = "mood", length = 50)
+    private String mood;
 
-    @Column(name = "dress_fabrictype", length = 50)
-    private String dressFabrictype;
+    @Column(name = "fabric", length = 50)
+    private String fabric;
 
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
