@@ -135,26 +135,4 @@ public class DressEnum {
             return koreanName;
         }
     }
-    
-    // 드레스 용도 Enum
-    public enum Usage {
-        MAIN_CEREMONY("본식"),
-        SECOND_PARTY("2부 드레스"),
-        PHOTO_SHOOT("촬영용"),
-        SELF_WEDDING("셀프웨딩"),
-        SMALL_WEDDING("스몰웨딩"),
-        RECEPTION("리셉션"),
-        PARTY("파티"),
-        HOTEL_WEDDING("호텔웨딩");
-        
-        private final String koreanName;
-        
-        Usage(String koreanName) {
-            this.koreanName = koreanName;
-        }
-        
-        public String getKoreanName() {
-            return koreanName;
-        }
-    }
 }

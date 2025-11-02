@@ -19,7 +19,6 @@ public class DressRequest {
     private DressEnum.Neckline neckLine;     
     private DressEnum.Mood mood;              
     private String fabric;  // 여러 원단 타입을 콤마로 구분 (예: "LACE,BEADS")
-    private String usage;   // 여러 용도를 콤마로 구분 (예: "MAIN_CEREMONY,PHOTO_SHOOT")
     private String features;  // 특징 또는 기타 컬럼            
 
     public Dress toEntity() {
