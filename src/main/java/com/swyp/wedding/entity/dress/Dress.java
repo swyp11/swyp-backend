@@ -59,9 +59,6 @@ public class Dress {
     @Column(name = "fabric", length = 200)  // 여러 원단 타입을 콤마로 구분해서 저장
     private String fabric;
     
-    @Column(name = "usage", length = 200)  // 여러 용도를 콤마로 구분해서 저장
-    private String usage;
-    
     @Column(name = "features", length = 500)
     private String features;  // 특징 또는 기타 컬럼
 
