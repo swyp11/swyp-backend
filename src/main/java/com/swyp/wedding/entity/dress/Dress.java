@@ -18,6 +18,9 @@ public class Dress {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "name", length = 100)
+    private String name; 
+
     @Column(name = "color", length = 50)
     private String color;
 
@@ -27,11 +30,13 @@ public class Dress {
     @Column(name = "price_range", length = 50)
     private String priceRange;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "length", length = 10)
-    private String length;
+    private DressEnum.Length length;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "season", length = 50)
-    private String season;
+    private DressEnum.Season season;
 
     @Column(name = "brand", length = 50)
     private String brand;
@@ -39,17 +44,26 @@ public class Dress {
     @Column(name = "designer", length = 50)
     private String designer;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", length = 50)
-    private String type;
+    private DressEnum.Type type;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "neck_line", length = 50)
-    private String neckLine;
+    private DressEnum.Neckline neckLine;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "mood", length = 50)
-    private String mood;
+    private DressEnum.Mood mood;
 
-    @Column(name = "fabric", length = 50)
+    @Column(name = "fabric", length = 200)  // 여러 원단 타입을 콤마로 구분해서 저장
     private String fabric;
+    
+    @Column(name = "usage", length = 200)  // 여러 용도를 콤마로 구분해서 저장
+    private String usage;
+    
+    @Column(name = "features", length = 500)
+    private String features;  // 특징 또는 기타 컬럼
 
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
