@@ -167,7 +167,7 @@ class WeddingApiControllerTest {
     void saveWedding_Success() throws Exception {
         // given
         given(weddingHallService.saveWedding(any(WeddingHallRequest.class)))
-                .willReturn(testWeddingHall);
+                .willReturn(true);
 
         // when & then
         mockMvc.perform(post("/api/wedding")
@@ -184,7 +184,7 @@ class WeddingApiControllerTest {
     void saveWedding_Failure() throws Exception {
         // given
         given(weddingHallService.saveWedding(any(WeddingHallRequest.class)))
-                .willReturn(null);
+                .willReturn(false);
 
         // when & then
         mockMvc.perform(post("/api/wedding")
