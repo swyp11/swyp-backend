@@ -31,4 +31,9 @@ public class WeddingHallServiceImpl implements WeddingHallService{
 
         return weddingHallRepository.save(weddingHall);
     }
+
+    @Override
+    public WeddingHallResponse getWeddingInfo(Long id) {
+        return WeddingHallResponse.from(weddingHallRepository.getReferenceById(id));
+    }
 }
