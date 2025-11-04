@@ -24,9 +24,17 @@ public class WeddingApiController {
         return ResponseEntity.ok(weddingHallService.getWeddingInfos());
     }
 
+
+    @Operation(summary = "웨딩홀에 대한 상세정보를 조회합니다.")
+    @GetMapping("/{id}")
+    public ResponseEntity<WeddingHallResponse> getWeddingInfo(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(weddingHallService.getWeddingInfo(id));
+    }
+
     @Operation(summary = "웨딩홀에 대한 정보를 저장합니다.")
     @PostMapping
     public ResponseEntity<Map<String, Object>> saveWedding(@RequestBody WeddingHallRequest request) {
         return ResponseEntity.ok(Map.of("result", weddingHallService.saveWedding(request) != null));
     }
+
 }

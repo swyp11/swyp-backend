@@ -11,4 +11,5 @@ import java.util.List;
 public interface WeddingHallService {
     List<WeddingHallResponse> getWeddingInfos();
     WeddingHall saveWedding(WeddingHallRequest request);
+    WeddingHallResponse getWeddingInfo(Long id);
 }
