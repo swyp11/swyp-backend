@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -160,17 +161,21 @@ class WeddingHallServiceImplTest {
         given(weddingHallRepository.save(any(WeddingHall.class))).willReturn(expectedSavedWeddingHall);
 
         // when
-        WeddingHall result = weddingHallService.saveWedding(request);
+        boolean result = weddingHallService.saveWedding(request);
 
         // then
-        assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(3L);
-        assertThat(result.getName()).isEqualTo("신규 웨딩홀");
-        assertThat(result.getVenueType()).isEqualTo(WeddingHallEnum.OUTDOOR);
-        assertThat(result.getParking()).isEqualTo(300);
-        assertThat(result.getAddress()).isEqualTo("서울시 종로구 종로 789");
-        assertThat(result.getPhone()).isEqualTo("02-9999-8888");
-        assertThat(result.getEmail()).isEqualTo("new@wedding.com");
+        assertThat(result).isTrue();
+        verify(weddingHallRepository).save(any(WeddingHall.class));
+
+        ArgumentCaptor<WeddingHall> weddingHallCaptor = ArgumentCaptor.forClass(WeddingHall.class);
+        verify(weddingHallRepository).save(weddingHallCaptor.capture());
+        WeddingHall savedWeddingHall = weddingHallCaptor.getValue();
+
+        assertThat(savedWeddingHall.getVenueType()).isEqualTo(WeddingHallEnum.OUTDOOR);
+        assertThat(savedWeddingHall.getParking()).isEqualTo(300);
+        assertThat(savedWeddingHall.getAddress()).isEqualTo("서울시 종로구 종로 789");
+        assertThat(savedWeddingHall.getPhone()).isEqualTo("02-9999-8888");
+        assertThat(savedWeddingHall.getEmail()).isEqualTo("new@wedding.com");
 
         verify(weddingHallRepository).save(any(WeddingHall.class));
     }
@@ -200,10 +205,10 @@ class WeddingHallServiceImplTest {
         given(weddingHallRepository.save(any(WeddingHall.class))).willReturn(mockSavedEntity);
 
         // when
-        WeddingHall result = weddingHallService.saveWedding(request);
+        boolean result = weddingHallService.saveWedding(request);
 
         // then
-        assertThat(result).isNotNull();
+        assertThat(result).isTrue();
 
         verify(weddingHallRepository).save(any(WeddingHall.class));
     }
