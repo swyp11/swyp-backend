@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -96,6 +97,42 @@ class WeddingHallServiceImplTest {
         assertThat(response2.getVenueType()).isEqualTo(WeddingHallEnum.HOTEL);
 
         verify(weddingHallRepository).findAll();
+    }
+
+    /*
+    이 부분은 exception class 생성 후 테스트 예정
+    @Test
+    @DisplayName("웨딩홀 상세정보 조회 - Repository가 빈 리스트를 반환하는 경우")
+    void getWeddingInfo_WhenRepositoryReturnsEmptyList() {
+        // given
+        given(weddingHallRepository.getReferenceById(anyLong())).willReturn(null);
+
+        // when
+        WeddingHallResponse responses = weddingHallService.getWeddingInfo(anyLong());
+
+        // then
+        assertThat(responses).isNull();
+        verify(weddingHallRepository).findById(anyLong());
+    }*/
+
+    @Test
+    @DisplayName("웨딩홀 상세정보 조회 - Repository가 데이터를 반환하는 경우")
+    void getWeddingInfo_WhenRepositoryReturnsData() {
+        // given
+        WeddingHall weddingHall = testWeddingHall1;
+        given(weddingHallRepository.getReferenceById(testWeddingHall1.getId())).willReturn(weddingHall);
+
+        // when
+        WeddingHallResponse response = weddingHallService.getWeddingInfo(testWeddingHall1.getId());
+
+        // then
+        assertThat(response).isNotNull();
+
+        assertThat(response.getId()).isEqualTo(1L);
+        assertThat(response.getName()).isEqualTo("그랜드 웨딩홀");
+        assertThat(response.getVenueType()).isEqualTo(WeddingHallEnum.WEDDING_HALL);
+
+        verify(weddingHallRepository).getReferenceById(testWeddingHall1.getId());
     }
 
     @Test

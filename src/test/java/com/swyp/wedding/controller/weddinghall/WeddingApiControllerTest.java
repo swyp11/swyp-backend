@@ -9,6 +9,7 @@ import com.swyp.wedding.service.weddinghall.WeddingHallServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -120,6 +122,43 @@ class WeddingApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    @DisplayName("GET /api/wedding - 웨딩홀 상세정보 조회")
+    void getWeddingInfo_Success() throws Exception {
+        // given
+        WeddingHallResponse responses = testResponse1;
+        given(weddingHallService.getWeddingInfo(anyLong())).willReturn(responses);
+
+        // when & then
+        mockMvc.perform(get("/api/wedding/{id}", 1L))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("그랜드 웨딩홀"))
+                .andExpect(jsonPath("$.venueType").value("WEDDING_HALL"))
+                .andExpect(jsonPath("$.parking").value(100))
+                .andExpect(jsonPath("$.address").value("서울시 강남구 테헤란로 123"))
+                .andExpect(jsonPath("$.phone").value("02-1234-5678"))
+                .andExpect(jsonPath("$.email").value("grand@wedding.com"));
+    }
+
+    @Test
+    @DisplayName("GET /api/wedding - 빈 리스트 조회")
+    void getWeddingInfo_EmptyList() throws Exception {
+        // given
+        given(weddingHallService.getWeddingInfo(anyLong())).willReturn(new WeddingHallResponse());
+
+        // when & then
+        mockMvc.perform(get("/api/wedding"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isEmpty())
                 .andExpect(jsonPath("$.length()").value(0));
     }
 
