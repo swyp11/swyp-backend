@@ -10,4 +10,5 @@ public interface WeddingHallService {
     boolean saveWedding(WeddingHallRequest request);
     WeddingHallResponse getWeddingInfo(Long id);
     boolean updateWedding(WeddingHallRequest request);
+    boolean deleteWedding(Long id);
 }
