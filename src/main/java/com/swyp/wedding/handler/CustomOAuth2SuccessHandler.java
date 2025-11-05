@@ -42,7 +42,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         response.addCookie(createCookie("Authorization", token));;
         // 로그인 후 리다이렉트
         //response.sendRedirect("http://localhost:3000/"); //-> 프론트로 리다이렉트
-        response.sendRedirect("/home");
+        response.sendRedirect("/user"); // 그저 로그인 후 리다이렉트 확인용
         System.out.println("✅ CustomOAuth2SuccessHandler의 확인용 Authorization : " + token);
 
     }
