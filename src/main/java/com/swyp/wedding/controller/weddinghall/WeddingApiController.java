@@ -3,16 +3,18 @@ package com.swyp.wedding.controller.weddinghall;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.swyp.wedding.dto.weddinghall.WeddingHallRequest;
 import com.swyp.wedding.dto.weddinghall.WeddingHallResponse;
-import com.swyp.wedding.service.weddinghall.WeddingHallServiceImpl;
+import com.swyp.wedding.service.weddinghall.impl.WeddingHallServiceImpl;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "웨딩홀 API")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/wedding")
