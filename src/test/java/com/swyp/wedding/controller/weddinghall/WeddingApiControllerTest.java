@@ -22,8 +22,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -180,7 +179,7 @@ class WeddingApiControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/wedding - 웨딩홀 저장 실패 (null 반환)")
+    @DisplayName("POST /api/wedding - 웨딩홀 저장 실패 (false 반환)")
     void saveWedding_Failure() throws Exception {
         // given
         given(weddingHallService.saveWedding(any(WeddingHallRequest.class)))
@@ -190,6 +189,38 @@ class WeddingApiControllerTest {
         mockMvc.perform(post("/api/wedding")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testRequest)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.result").value(false));
+    }
+
+    @Test
+    @DisplayName("웨딩홀 정보를 삭제에 성공합니다.")
+    void deleteWedding_Success() throws Exception {
+        // given
+        given(weddingHallService.deleteWedding(anyLong()))
+                .willReturn(true);
+
+        // when & then
+        mockMvc.perform(delete("/api/wedding/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.result").value(true));
+    }
+
+    @Test
+    @DisplayName("웨딩홀 정보 삭제에 실패합니다.")
+    void deleteWedding_Failure() throws Exception {
+        // given
+        given(weddingHallService.deleteWedding(anyLong()))
+                .willReturn(false);
+
+        // when & then
+        mockMvc.perform(delete("/api/wedding/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

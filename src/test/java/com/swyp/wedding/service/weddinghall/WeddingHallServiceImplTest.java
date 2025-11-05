@@ -13,9 +13,11 @@ import org.mockito.ArgumentCaptor;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.verify;
+
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.swyp.wedding.dto.weddinghall.WeddingHallRequest;
@@ -23,6 +25,7 @@ import com.swyp.wedding.dto.weddinghall.WeddingHallResponse;
 import com.swyp.wedding.entity.weddinghall.WeddingHall;
 import com.swyp.wedding.entity.weddinghall.WeddingHallEnum;
 import com.swyp.wedding.repository.weddinghall.WeddingHallRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 
 @ExtendWith(MockitoExtension.class)  // Mock 사용을 위한 확장
 @DisplayName("WeddingHallService 단위 테스트")
@@ -212,4 +215,91 @@ class WeddingHallServiceImplTest {
 
         verify(weddingHallRepository).save(any(WeddingHall.class));
     }
+
+    @Test
+    @DisplayName("웨딩홀 삭제 성공합니다.")
+    void deleteWedding_success() {
+        // given
+        WeddingHallRequest request = new WeddingHallRequest();
+        request.setName("신규 웨딩홀");
+        request.setVenueType(WeddingHallEnum.OUTDOOR);
+        request.setParking(300);
+        request.setAddress("서울시 종로구 종로 789");
+        request.setPhone("02-9999-8888");
+        request.setEmail("new@wedding.com");
+
+        WeddingHall expectedSavedWeddingHall = WeddingHall.builder()
+                .id(3L)
+                .name("신규 웨딩홀")
+                .venueType(WeddingHallEnum.OUTDOOR)
+                .parking(300)
+                .address("서울시 종로구 종로 789")
+                .phone("02-9999-8888")
+                .email("new@wedding.com")
+                .build();
+
+        given(weddingHallRepository.save(any(WeddingHall.class))).willReturn(expectedSavedWeddingHall);
+
+        // when
+        boolean result = weddingHallService.saveWedding(request);
+
+        // then
+        assertThat(result).isTrue();
+        verify(weddingHallRepository).save(any(WeddingHall.class));
+
+        ArgumentCaptor<WeddingHall> weddingHallCaptor = ArgumentCaptor.forClass(WeddingHall.class);
+        verify(weddingHallRepository).save(weddingHallCaptor.capture());
+        WeddingHall savedWeddingHall = weddingHallCaptor.getValue();
+
+        assertThat(savedWeddingHall.getVenueType()).isEqualTo(WeddingHallEnum.OUTDOOR);
+        assertThat(savedWeddingHall.getParking()).isEqualTo(300);
+        assertThat(savedWeddingHall.getAddress()).isEqualTo("서울시 종로구 종로 789");
+        assertThat(savedWeddingHall.getPhone()).isEqualTo("02-9999-8888");
+        assertThat(savedWeddingHall.getEmail()).isEqualTo("new@wedding.com");
+
+        verify(weddingHallRepository).save(any(WeddingHall.class));
+    }
+
+    @DisplayName("웨딩홀 데이터 삭제에 성공합니다.")
+    @Test
+    void deleteWeddingTest_success() {
+        // given
+        when(weddingHallRepository.existsById(anyLong())).thenReturn(true);
+        doNothing().when(weddingHallRepository).deleteById(anyLong());
+
+        // when
+        boolean result = weddingHallService.deleteWedding(1L);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("id가 존재하지 않는 경우 데이터 삭제를 시도합니다.")
+    @Test
+    void deleteWeddingTest_Is_Not_Exist() {
+        // given
+        when(weddingHallRepository.existsById(1L)).thenReturn(false);
+
+        // when
+        boolean result = weddingHallService.deleteWedding(1L);
+
+        // then
+        assertThat(result).isFalse();
+
+        verify(weddingHallRepository).existsById(1L);
+        verify(weddingHallRepository, never()).deleteById(any());
+    }
+
+//    @Override
+//    public boolean deleteWedding(Long id) {
+//        if (!weddingHallRepository.existsById(id))
+//            return false;
+//
+//        try{
+//            weddingHallRepository.deleteById(id);
+//            return true;
+//        } catch (DataIntegrityViolationException e) {
+//            throw e;
+//        }
+//    }
 }
