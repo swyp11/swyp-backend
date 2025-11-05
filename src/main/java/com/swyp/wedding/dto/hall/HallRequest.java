@@ -27,7 +27,7 @@ public class HallRequest {
     private BigDecimal aisleLength;
     private boolean pillar = false;
     private boolean status = true;
-    private String desc;
+    private String description;
     private LocalDateTime regDt;
     private LocalDateTime updateDt;
 
@@ -46,7 +46,7 @@ public class HallRequest {
                 .aisleLength(aisleLength)
                 .pillar(pillar)
                 .status(status)
-                .desc(desc)
+                .description(description)
                 .build();
     }
 }

@@ -60,7 +60,7 @@ public class Hall {
     private boolean status = true;
 
     @Comment("추가 설명")
-    private String desc;
+    private String description;
 
     @Comment("등록 일자")
     private LocalDateTime regDt;
