@@ -1,4 +1,4 @@
-package com.swyp.wedding.controller;
+package com.swyp.wedding.controller.join;
 
 import com.swyp.wedding.dto.user.UserRequest;
 import com.swyp.wedding.service.JoinService;
