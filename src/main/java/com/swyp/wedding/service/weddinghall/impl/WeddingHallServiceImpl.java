@@ -1,4 +1,4 @@
-package com.swyp.wedding.service.weddinghall;
+package com.swyp.wedding.service.weddinghall.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,6 +10,7 @@ import com.swyp.wedding.dto.weddinghall.WeddingHallRequest;
 import com.swyp.wedding.dto.weddinghall.WeddingHallResponse;
 import com.swyp.wedding.entity.weddinghall.WeddingHall;
 import com.swyp.wedding.repository.weddinghall.WeddingHallRepository;
+import com.swyp.wedding.service.weddinghall.WeddingHallService;
 
 import lombok.RequiredArgsConstructor;
 
