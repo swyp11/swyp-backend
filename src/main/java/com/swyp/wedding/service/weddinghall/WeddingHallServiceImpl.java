@@ -3,6 +3,7 @@ package com.swyp.wedding.service.weddinghall;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.swyp.wedding.dto.weddinghall.WeddingHallRequest;
@@ -70,5 +71,18 @@ public class WeddingHallServiceImpl implements WeddingHallService{
                     return true;
                 })
                 .orElse(false);
+    }
+
+    @Override
+    public boolean deleteWedding(Long id) {
+        if (!weddingHallRepository.existsById(id))
+            return false;
+
+        try{
+            weddingHallRepository.deleteById(id);
+            return true;
+        } catch (DataIntegrityViolationException e) {
+            throw e;
+        }
     }
 }
