@@ -11,7 +11,7 @@ WORKDIR /app
 COPY build/libs/*.jar app.jar
 
 # Add a non-root user for security
-RUN groupadd -r spring && useradd -r -g spring spring
+RUN addgroup -S spring && adduser -S spring -G spring
 RUN chown -R spring:spring /app
 USER spring
 
