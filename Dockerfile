@@ -8,7 +8,7 @@ RUN apk add --no-cache curl
 WORKDIR /app
 
 # Copy the build artifact to the container
-COPY build/libs/backend-0.0.1-SNAPSHOT.jar app.jar
+COPY build/libs/*.jar app.jar
 
 # Add a non-root user for security
 RUN groupadd -r spring && useradd -r -g spring spring
