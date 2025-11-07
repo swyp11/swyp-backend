@@ -38,8 +38,8 @@ public class Dress {
     @Column(name = "season", length = 50)
     private DressEnum.Season season;
 
-    @Column(name = "brand", length = 50)
-    private String brand;
+    @Column(name = "shop_name", length = 100, nullable = false)
+    private String shopName;  // DressShop의 shopName과 연결
 
     @Column(name = "designer", length = 50)
     private String designer;
