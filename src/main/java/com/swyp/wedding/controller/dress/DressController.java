@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.swyp.wedding.dto.dress.DressRequest;
 import com.swyp.wedding.dto.dress.DressResponse;
+import com.swyp.wedding.entity.common.SortType;
 import com.swyp.wedding.service.dress.DressService;
 
 import java.util.List;
@@ -22,28 +23,15 @@ public class DressController {
     private final DressService dressService;
 
     @Operation(summary = "드레스 목록 조회", 
-               description = "드레스 목록을 조회합니다. 파라미터로 검색 및 정렬 옵션을 지정할 수 있습니다.")
+               description = "드레스 목록을 조회합니다. 파라미터로 검색 및 정렬 옵션을 지정할 수 있습니다. 여러 조건을 동시에 사용 가능합니다.")
     @GetMapping
     public ResponseEntity<List<DressResponse>> getAllDresses(
-            @Parameter(description = "샵 이름 (정확한 이름)") @RequestParam(required = false) String shopName,
             @Parameter(description = "샵 이름 (부분 일치 검색)") @RequestParam(required = false) String shopNameContains,
-            @Parameter(description = "정렬 기준: recent(최신순), default(기본)", example = "recent") 
-            @RequestParam(required = false, defaultValue = "default") String sort) {
+            @Parameter(description = "정렬 기준: RECENT(최신순), FAVORITE(인기순)", example = "RECENT") 
+            @RequestParam(required = false) SortType sort) {
         
-        List<DressResponse> dresses;
-        
-        // 검색 조건이 있는 경우
-        if (shopName != null && !shopName.trim().isEmpty()) {
-            dresses = dressService.getDressesByShopName(shopName);
-        } else if (shopNameContains != null && !shopNameContains.trim().isEmpty()) {
-            dresses = dressService.getDressesByShopNameContaining(shopNameContains);
-        } else if ("recent".equalsIgnoreCase(sort)) {
-            // 최신순 정렬
-            dresses = dressService.getAllDressesOrderByNewest();
-        } else {
-            // 기본 전체 조회
-            dresses = dressService.getAllDresses();
-        }
+        // 복합 조건으로 검색 (null이 아닌 모든 파라미터 적용)
+        List<DressResponse> dresses = dressService.searchDresses(shopNameContains, sort);
         
         return ResponseEntity.ok(dresses);
     }
