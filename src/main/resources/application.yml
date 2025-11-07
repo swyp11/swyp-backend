@@ -4,7 +4,18 @@ spring:
     url: jdbc:mysql://223.130.163.203:3306/swyp_test?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-#spring:
+
+  jwt:
+    secret: "dsdfegsetahrfhtrysfhewwaadffffxxxbbbbbggfgjfssdfh"
+
+oauth:
+  google:
+    client-id: 111459753848-t1rk1bh3s5no6f29ejhai17soon2buo4.apps.googleusercontent.com
+    client-secret:
+    token-uri: https://oauth2.googleapis.com/token
+    userinfo-uri: https://www.googleapis.com/oauth2/v2/userinfo
+
+  #spring:
 #  datasource:
 #    driver-class-name: org.h2.Driver
 #    url: 'jdbc:h2:mem:tmp'   # H2 DB ?? ?? (In-Memory Mode)
@@ -52,3 +63,5 @@ springdoc:
     doc-expansion: none
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
+
+
