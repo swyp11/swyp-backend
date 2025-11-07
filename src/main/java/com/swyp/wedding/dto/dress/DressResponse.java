@@ -15,7 +15,7 @@ public class DressResponse {
     private String priceRange;                 
     private DressEnum.Length length;          
     private DressEnum.Season season;           
-    private String brand;                      
+    private String shopName;                    // DressShop 이름 (브랜드명)
     private String designer;                    
     private DressEnum.Type type;               
     private DressEnum.Neckline neckLine;        
@@ -33,8 +33,8 @@ public class DressResponse {
         response.setShape(dress.getShape()); 
         response.setPriceRange(dress.getPriceRange()); 
         response.setLength(dress.getLength());             
-        response.setSeason(dress.getSeason());             
-        response.setBrand(dress.getBrand());               
+        response.setSeason(dress.getSeason());
+        response.setShopName(dress.getShopName());               
         response.setDesigner(dress.getDesigner());         
         response.setType(dress.getType());                 
         response.setNeckLine(dress.getNeckLine());    
