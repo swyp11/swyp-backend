@@ -1,8 +1,9 @@
 package com.swyp.wedding.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.swyp.wedding.dto.user.LoginRequest;
+import com.swyp.wedding.dto.auth.LoginRequest;
 import com.swyp.wedding.security.user.CustomUserDetails;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,6 +22,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 @RequiredArgsConstructor
+@Schema(description = "JWT AuthenticationFilter -> 로그인 전을 담당 /login 요청이 들어왔을 때 토큰을 발급해주는 역할" )
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
@@ -36,7 +38,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             UsernamePasswordAuthenticationToken authToken =
                     new UsernamePasswordAuthenticationToken(loginRequest.getUserId(), loginRequest.getPassword());
 
-            //test
+            // 콘솔 확인용
             System.out.println(loginRequest.getUserId());
 
             return authenticationManager.authenticate(authToken);
@@ -60,7 +62,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(username, role, 60*60*10L);
+        String token = jwtUtil.createToken(username, role);
 
         response.addHeader("Authorization", "Bearer " + token);
     }
@@ -76,7 +78,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String message;
         if (failed instanceof BadCredentialsException) {
-            message = "비밀번호가 올바르지 않습니다.";
+            message = "아이디 / 비밀번호가 올바르지 않습니다.";
         } else if (failed instanceof UsernameNotFoundException) {
             message = "존재하지 않는 사용자입니다.";
         } else {
