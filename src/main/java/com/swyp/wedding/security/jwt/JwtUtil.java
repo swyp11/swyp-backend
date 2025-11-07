@@ -14,6 +14,8 @@ public class JwtUtil {
 
     private SecretKey secretKey;
 
+    private static final long EXPIRATION_MS = 1000L * 60 * 60; // 1시간
+
     public JwtUtil(@Value("${spring.jwt.secret}")String secret) {
 
         secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
@@ -34,13 +36,13 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String createJwt(String username, String role, Long expiredMs) {
+    public String createToken(String username, String role) {
 
         return Jwts.builder()
                 .claim("username", username)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiredMs))
+                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(secretKey)
                 .compact();
     }
