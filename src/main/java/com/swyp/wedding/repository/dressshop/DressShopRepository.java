@@ -19,4 +19,7 @@ public interface DressShopRepository extends JpaRepository<DressShop, Long> {
     
     // 전문분야로 검색
     List<DressShop> findBySpecialtyContainingIgnoreCase(String specialty);
+    
+    // 등록일 기준 최신순으로 전체 드레스샵 조회
+    List<DressShop> findAllByOrderByRegDtDesc();
 }
