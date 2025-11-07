@@ -23,10 +23,33 @@ public class DressShopController {
     private final DressShopService dressShopService;
     private final DressService dressService;
 
-    @Operation(summary = "전체 드레스샵 목록 조회", description = "등록된 모든 드레스샵의 목록을 조회합니다.")
+    @Operation(summary = "드레스샵 목록 조회", 
+               description = "드레스샵 목록을 조회합니다. 파라미터로 검색 및 정렬 옵션을 지정할 수 있습니다.")
     @GetMapping
-    public ResponseEntity<List<DressShopResponse>> getAllDressShops() {
-        List<DressShopResponse> dressShops = dressShopService.getAllDressShops();
+    public ResponseEntity<List<DressShopResponse>> getAllDressShops(
+            @Parameter(description = "샵 이름 (부분 일치 검색)") @RequestParam(required = false) String shopName,
+            @Parameter(description = "주소/지역 (부분 일치 검색)") @RequestParam(required = false) String address,
+            @Parameter(description = "전문분야 (부분 일치 검색)") @RequestParam(required = false) String specialty,
+            @Parameter(description = "정렬 기준: recent(최신순), default(기본)", example = "recent") 
+            @RequestParam(required = false, defaultValue = "default") String sort) {
+        
+        List<DressShopResponse> dressShops;
+        
+        // 검색 조건이 있는 경우
+        if (shopName != null && !shopName.trim().isEmpty()) {
+            dressShops = dressShopService.searchByShopName(shopName);
+        } else if (address != null && !address.trim().isEmpty()) {
+            dressShops = dressShopService.searchByAddress(address);
+        } else if (specialty != null && !specialty.trim().isEmpty()) {
+            dressShops = dressShopService.searchBySpecialty(specialty);
+        } else if ("recent".equalsIgnoreCase(sort)) {
+            // 최신순 정렬
+            dressShops = dressShopService.getAllDressShopsOrderByNewest();
+        } else {
+            // 기본 전체 조회
+            dressShops = dressShopService.getAllDressShops();
+        }
+        
         return ResponseEntity.ok(dressShops);
     }
 
@@ -61,30 +84,6 @@ public class DressShopController {
         dressShopService.deleteDressShop(id);
         return ResponseEntity.noContent().build();
     }
-
-    @Operation(summary = "샵 이름으로 검색", description = "샵 이름으로 드레스샵을 검색합니다. (부분 일치)")
-    @GetMapping("/search/name")
-    public ResponseEntity<List<DressShopResponse>> searchByShopName(
-            @Parameter(description = "검색할 샵 이름", required = true) @RequestParam String shopName) {
-        List<DressShopResponse> dressShops = dressShopService.searchByShopName(shopName);
-        return ResponseEntity.ok(dressShops);
-    }
-
-    @Operation(summary = "지역으로 검색", description = "주소를 기준으로 드레스샵을 검색합니다. (부분 일치)")
-    @GetMapping("/search/address")
-    public ResponseEntity<List<DressShopResponse>> searchByAddress(
-            @Parameter(description = "검색할 지역/주소", required = true) @RequestParam String address) {
-        List<DressShopResponse> dressShops = dressShopService.searchByAddress(address);
-        return ResponseEntity.ok(dressShops);
-    }
-
-    @Operation(summary = "전문분야로 검색", description = "전문분야(specialty)로 드레스샵을 검색합니다. 예: 가성비, 프리미엄, 빅사이즈")
-    @GetMapping("/search/specialty")
-    public ResponseEntity<List<DressShopResponse>> searchBySpecialty(
-            @Parameter(description = "검색할 전문분야", required = true) @RequestParam String specialty) {
-        List<DressShopResponse> dressShops = dressShopService.searchBySpecialty(specialty);
-        return ResponseEntity.ok(dressShops);
-    }
     
     @Operation(summary = "샵의 드레스 목록 조회", description = "특정 드레스샵에 등록된 모든 드레스를 조회합니다.")
     @GetMapping("/{id}/dresses")
@@ -98,13 +97,5 @@ public class DressShopController {
             dressService.getDressesByShopName(dressShop.getShopName());
         
         return ResponseEntity.ok(dresses);
-    }
-    
-    @Operation(summary = "최신 드레스샵 목록 조회", 
-               description = "등록일(reg_dt) 기준으로 최신순으로 정렬된 드레스샵 목록을 조회합니다.")
-    @GetMapping("/recent")
-    public ResponseEntity<List<DressShopResponse>> getRecentDressShops() {
-        List<DressShopResponse> dressShops = dressShopService.getAllDressShopsOrderByNewest();
-        return ResponseEntity.ok(dressShops);
     }
 }
