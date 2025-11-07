@@ -31,7 +31,7 @@ public class User {
 
     private String email;
 
-    private String providerId;     // 소셜에서 받은 고유 ID
+    private String provider;     // google, kakao...등
 
     @Enumerated(EnumType.STRING)
     private UserEnum auth;
