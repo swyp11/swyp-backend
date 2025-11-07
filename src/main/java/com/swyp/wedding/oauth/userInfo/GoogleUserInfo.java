@@ -1,11 +1,11 @@
-package com.swyp.wedding.dto.oAuth2;
+package com.swyp.wedding.oauth.userInfo;
 
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class GoogleResponse implements OAuth2Response{
+public class GoogleUserInfo implements OAuthUserInfo {
 
     private final Map<String, Object> attribute;
 
