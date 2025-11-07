@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.swyp.wedding.dto.dress.DressRequest;
 import com.swyp.wedding.dto.dress.DressResponse;
+import com.swyp.wedding.entity.common.SortType;
 import com.swyp.wedding.service.dress.DressService;
 
 import java.util.List;
@@ -21,10 +22,17 @@ public class DressController {
 
     private final DressService dressService;
 
-    @Operation(summary = "전체 드레스 목록 조회", description = "등록된 모든 드레스의 목록을 조회합니다.")
+    @Operation(summary = "드레스 목록 조회", 
+               description = "드레스 목록을 조회합니다. 파라미터로 검색 및 정렬 옵션을 지정할 수 있습니다. 여러 조건을 동시에 사용 가능합니다.")
     @GetMapping
-    public ResponseEntity<List<DressResponse>> getAllDresses() {
-        List<DressResponse> dresses = dressService.getAllDresses();
+    public ResponseEntity<List<DressResponse>> getAllDresses(
+            @Parameter(description = "샵 이름 (부분 일치 검색)") @RequestParam(required = false) String shopNameContains,
+            @Parameter(description = "정렬 기준: RECENT(최신순), FAVORITE(인기순)", example = "RECENT") 
+            @RequestParam(required = false) SortType sort) {
+        
+        // 복합 조건으로 검색 (null이 아닌 모든 파라미터 적용)
+        List<DressResponse> dresses = dressService.searchDresses(shopNameContains, sort);
+        
         return ResponseEntity.ok(dresses);
     }
 
@@ -58,31 +66,5 @@ public class DressController {
             @Parameter(description = "드레스 ID", required = true) @PathVariable Long id) {
         dressService.deleteDress(id);
         return ResponseEntity.noContent().build();
-    }
-    
-    @Operation(summary = "샵 이름으로 드레스 검색 (정확 일치)", 
-               description = "shop_name이 정확히 일치하는 드레스를 검색합니다.")
-    @GetMapping("/search/shop")
-    public ResponseEntity<List<DressResponse>> getDressesByShopName(
-            @Parameter(description = "검색할 샵 이름 (정확한 이름)", required = true) @RequestParam String shopName) {
-        List<DressResponse> dresses = dressService.getDressesByShopName(shopName);
-        return ResponseEntity.ok(dresses);
-    }
-    
-    @Operation(summary = "샵 이름으로 드레스 검색 (부분 일치)", 
-               description = "shop_name이 부분적으로 포함된 드레스를 검색합니다.")
-    @GetMapping("/search/shop/contains")
-    public ResponseEntity<List<DressResponse>> getDressesByShopNameContaining(
-            @Parameter(description = "검색할 샵 이름 (부분 일치)", required = true) @RequestParam String shopName) {
-        List<DressResponse> dresses = dressService.getDressesByShopNameContaining(shopName);
-        return ResponseEntity.ok(dresses);
-    }
-    
-    @Operation(summary = "최신 드레스 목록 조회", 
-               description = "등록일(reg_dt) 기준으로 최신순으로 정렬된 드레스 목록을 조회합니다.")
-    @GetMapping("/recent")
-    public ResponseEntity<List<DressResponse>> getRecentDresses() {
-        List<DressResponse> dresses = dressService.getAllDressesOrderByNewest();
-        return ResponseEntity.ok(dresses);
     }
 }

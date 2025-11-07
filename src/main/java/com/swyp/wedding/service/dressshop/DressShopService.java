@@ -2,6 +2,7 @@ package com.swyp.wedding.service.dressshop;
 
 import com.swyp.wedding.dto.dressshop.DressShopRequest;
 import com.swyp.wedding.dto.dressshop.DressShopResponse;
+import com.swyp.wedding.entity.common.SortType;
 import com.swyp.wedding.entity.dressshop.DressShop;
 import com.swyp.wedding.repository.dressshop.DressShopRepository;
 import lombok.RequiredArgsConstructor;
@@ -68,31 +69,30 @@ public class DressShopService {
                 .orElseThrow(() -> new RuntimeException("DressShop not found with id: " + id));
         dressShopRepository.delete(dressShop);
     }
-
-    // 샵 이름으로 검색
-    public List<DressShopResponse> searchByShopName(String shopName) {
-        return dressShopRepository.findByShopNameContainingIgnoreCase(shopName).stream()
-                .map(DressShopResponse::from)
-                .collect(Collectors.toList());
-    }
-
-    // 지역으로 검색
-    public List<DressShopResponse> searchByAddress(String address) {
-        return dressShopRepository.findByAddressContainingIgnoreCase(address).stream()
-                .map(DressShopResponse::from)
-                .collect(Collectors.toList());
-    }
-
-    // 전문분야로 검색
-    public List<DressShopResponse> searchBySpecialty(String specialty) {
-        return dressShopRepository.findBySpecialtyContainingIgnoreCase(specialty).stream()
-                .map(DressShopResponse::from)
-                .collect(Collectors.toList());
-    }
     
-    // 등록일 기준 최신순으로 전체 드레스샵 조회
-    public List<DressShopResponse> getAllDressShopsOrderByNewest() {
-        return dressShopRepository.findAllByOrderByRegDtDesc().stream()
+    // 복합 조건 검색 (여러 조건을 동시에 적용)
+    public List<DressShopResponse> searchDressShops(String shopName, String address, String specialty, SortType sort) {
+        List<DressShop> dressShops;
+        
+        // 정렬 기준에 따라 전체 조회
+        if (sort == SortType.RECENT) {
+            dressShops = dressShopRepository.findAllByOrderByRegDtDesc();
+        } else if (sort == SortType.FAVORITE) {
+            // TODO: 추후 인기순/즐겨찾기순 정렬 로직 구현
+            // 현재는 기본 정렬로 처리
+            dressShops = dressShopRepository.findAll();
+        } else {
+            dressShops = dressShopRepository.findAll();
+        }
+        
+        // 필터링 적용 (스트림으로 여러 조건 동시 적용)
+        return dressShops.stream()
+                .filter(shop -> shopName == null || shopName.trim().isEmpty() || 
+                        shop.getShopName().toLowerCase().contains(shopName.toLowerCase()))
+                .filter(shop -> address == null || address.trim().isEmpty() || 
+                        (shop.getAddress() != null && shop.getAddress().toLowerCase().contains(address.toLowerCase())))
+                .filter(shop -> specialty == null || specialty.trim().isEmpty() || 
+                        (shop.getSpecialty() != null && shop.getSpecialty().toLowerCase().contains(specialty.toLowerCase())))
                 .map(DressShopResponse::from)
                 .collect(Collectors.toList());
     }
