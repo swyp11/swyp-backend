@@ -77,4 +77,12 @@ public class DressController {
         List<DressResponse> dresses = dressService.getDressesByShopNameContaining(shopName);
         return ResponseEntity.ok(dresses);
     }
+    
+    @Operation(summary = "최신 드레스 목록 조회", 
+               description = "등록일(reg_dt) 기준으로 최신순으로 정렬된 드레스 목록을 조회합니다.")
+    @GetMapping("/recent")
+    public ResponseEntity<List<DressResponse>> getRecentDresses() {
+        List<DressResponse> dresses = dressService.getAllDressesOrderByNewest();
+        return ResponseEntity.ok(dresses);
+    }
 }
