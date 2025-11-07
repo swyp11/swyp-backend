@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.swyp.wedding.dto.dressshop.DressShopRequest;
 import com.swyp.wedding.dto.dressshop.DressShopResponse;
+import com.swyp.wedding.entity.common.SortType;
 import com.swyp.wedding.service.dressshop.DressShopService;
 import com.swyp.wedding.service.dress.DressService;
 
@@ -24,31 +25,17 @@ public class DressShopController {
     private final DressService dressService;
 
     @Operation(summary = "드레스샵 목록 조회", 
-               description = "드레스샵 목록을 조회합니다. 파라미터로 검색 및 정렬 옵션을 지정할 수 있습니다.")
+               description = "드레스샵 목록을 조회합니다. 파라미터로 검색 및 정렬 옵션을 지정할 수 있습니다. 여러 조건을 동시에 사용 가능합니다.")
     @GetMapping
     public ResponseEntity<List<DressShopResponse>> getAllDressShops(
             @Parameter(description = "샵 이름 (부분 일치 검색)") @RequestParam(required = false) String shopName,
             @Parameter(description = "주소/지역 (부분 일치 검색)") @RequestParam(required = false) String address,
             @Parameter(description = "전문분야 (부분 일치 검색)") @RequestParam(required = false) String specialty,
-            @Parameter(description = "정렬 기준: recent(최신순), default(기본)", example = "recent") 
-            @RequestParam(required = false, defaultValue = "default") String sort) {
+            @Parameter(description = "정렬 기준: RECENT(최신순), FAVORITE(인기순)", example = "RECENT") 
+            @RequestParam(required = false) SortType sort) {
         
-        List<DressShopResponse> dressShops;
-        
-        // 검색 조건이 있는 경우
-        if (shopName != null && !shopName.trim().isEmpty()) {
-            dressShops = dressShopService.searchByShopName(shopName);
-        } else if (address != null && !address.trim().isEmpty()) {
-            dressShops = dressShopService.searchByAddress(address);
-        } else if (specialty != null && !specialty.trim().isEmpty()) {
-            dressShops = dressShopService.searchBySpecialty(specialty);
-        } else if ("recent".equalsIgnoreCase(sort)) {
-            // 최신순 정렬
-            dressShops = dressShopService.getAllDressShopsOrderByNewest();
-        } else {
-            // 기본 전체 조회
-            dressShops = dressShopService.getAllDressShops();
-        }
+        // 복합 조건으로 검색 (null이 아닌 모든 파라미터 적용)
+        List<DressShopResponse> dressShops = dressShopService.searchDressShops(shopName, address, specialty, sort);
         
         return ResponseEntity.ok(dressShops);
     }
