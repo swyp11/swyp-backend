@@ -21,10 +21,30 @@ public class DressController {
 
     private final DressService dressService;
 
-    @Operation(summary = "전체 드레스 목록 조회", description = "등록된 모든 드레스의 목록을 조회합니다.")
+    @Operation(summary = "드레스 목록 조회", 
+               description = "드레스 목록을 조회합니다. 파라미터로 검색 및 정렬 옵션을 지정할 수 있습니다.")
     @GetMapping
-    public ResponseEntity<List<DressResponse>> getAllDresses() {
-        List<DressResponse> dresses = dressService.getAllDresses();
+    public ResponseEntity<List<DressResponse>> getAllDresses(
+            @Parameter(description = "샵 이름 (정확한 이름)") @RequestParam(required = false) String shopName,
+            @Parameter(description = "샵 이름 (부분 일치 검색)") @RequestParam(required = false) String shopNameContains,
+            @Parameter(description = "정렬 기준: recent(최신순), default(기본)", example = "recent") 
+            @RequestParam(required = false, defaultValue = "default") String sort) {
+        
+        List<DressResponse> dresses;
+        
+        // 검색 조건이 있는 경우
+        if (shopName != null && !shopName.trim().isEmpty()) {
+            dresses = dressService.getDressesByShopName(shopName);
+        } else if (shopNameContains != null && !shopNameContains.trim().isEmpty()) {
+            dresses = dressService.getDressesByShopNameContaining(shopNameContains);
+        } else if ("recent".equalsIgnoreCase(sort)) {
+            // 최신순 정렬
+            dresses = dressService.getAllDressesOrderByNewest();
+        } else {
+            // 기본 전체 조회
+            dresses = dressService.getAllDresses();
+        }
+        
         return ResponseEntity.ok(dresses);
     }
 
@@ -58,31 +78,5 @@ public class DressController {
             @Parameter(description = "드레스 ID", required = true) @PathVariable Long id) {
         dressService.deleteDress(id);
         return ResponseEntity.noContent().build();
-    }
-    
-    @Operation(summary = "샵 이름으로 드레스 검색 (정확 일치)", 
-               description = "shop_name이 정확히 일치하는 드레스를 검색합니다.")
-    @GetMapping("/search/shop")
-    public ResponseEntity<List<DressResponse>> getDressesByShopName(
-            @Parameter(description = "검색할 샵 이름 (정확한 이름)", required = true) @RequestParam String shopName) {
-        List<DressResponse> dresses = dressService.getDressesByShopName(shopName);
-        return ResponseEntity.ok(dresses);
-    }
-    
-    @Operation(summary = "샵 이름으로 드레스 검색 (부분 일치)", 
-               description = "shop_name이 부분적으로 포함된 드레스를 검색합니다.")
-    @GetMapping("/search/shop/contains")
-    public ResponseEntity<List<DressResponse>> getDressesByShopNameContaining(
-            @Parameter(description = "검색할 샵 이름 (부분 일치)", required = true) @RequestParam String shopName) {
-        List<DressResponse> dresses = dressService.getDressesByShopNameContaining(shopName);
-        return ResponseEntity.ok(dresses);
-    }
-    
-    @Operation(summary = "최신 드레스 목록 조회", 
-               description = "등록일(reg_dt) 기준으로 최신순으로 정렬된 드레스 목록을 조회합니다.")
-    @GetMapping("/recent")
-    public ResponseEntity<List<DressResponse>> getRecentDresses() {
-        List<DressResponse> dresses = dressService.getAllDressesOrderByNewest();
-        return ResponseEntity.ok(dresses);
     }
 }
