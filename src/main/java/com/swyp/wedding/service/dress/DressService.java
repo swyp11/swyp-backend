@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.swyp.wedding.dto.dress.DressRequest;
 import com.swyp.wedding.dto.dress.DressResponse;
+import com.swyp.wedding.entity.common.SortType;
 import com.swyp.wedding.entity.dress.Dress;
 import com.swyp.wedding.repository.dress.DressRepository;
 
@@ -18,14 +19,6 @@ import java.util.stream.Collectors;
 public class DressService {
 
     private final DressRepository dressRepository;
-
-    // 전체 드레스 목록 조회
-    public List<DressResponse> getAllDresses() {
-        return dressRepository.findAll()
-                .stream()
-                .map(DressResponse::from)
-                .collect(Collectors.toList());
-    }
 
     // 특정 드레스 조회
     public DressResponse getDressById(Long id) {
@@ -84,32 +77,39 @@ public class DressService {
         }
         dressRepository.deleteById(id);
     }
-
-    // 드레스 총 개수 조회
-    public long getDressCount() {
-        return dressRepository.count();
-    }
     
-    // shopName별 드레스 검색 (정확한 이름)
+    // shopName으로 드레스들 조회 (정확한 이름 일치) - DressShopController용
     public List<DressResponse> getDressesByShopName(String shopName) {
-        return dressRepository.findByShopName(shopName)
-                .stream()
+        List<Dress> dresses = dressRepository.findByShopName(shopName);
+        return dresses.stream()
                 .map(DressResponse::from)
                 .collect(Collectors.toList());
     }
     
-    // shopName별 드레스 검색 (부분 일치)
-    public List<DressResponse> getDressesByShopNameContaining(String shopName) {
-        return dressRepository.findByShopNameContainingIgnoreCase(shopName)
-                .stream()
-                .map(DressResponse::from)
-                .collect(Collectors.toList());
-    }
-    
-    // 등록일 기준 최신순으로 전체 드레스 조회
-    public List<DressResponse> getAllDressesOrderByNewest() {
-        return dressRepository.findAllByOrderByRegDtDesc()
-                .stream()
+    // 복합 조건 검색 (여러 조건을 동시에 적용)
+    public List<DressResponse> searchDresses(String shopNameContains, SortType sort) {
+        List<Dress> dresses;
+        
+        // 정렬 기준에 따라 전체 조회
+        if (sort == SortType.RECENT) {
+            dresses = dressRepository.findAllByOrderByRegDtDesc();
+        } else if (sort == SortType.FAVORITE) {
+            // TODO: 추후 찜순 정렬 로직 구현
+            // 현재는 기본 정렬로 처리
+            dresses = dressRepository.findAll();
+        } else {
+            dresses = dressRepository.findAll();
+        }
+        
+        // 필터링 적용 (스트림으로 여러 조건 동시 적용)
+        return dresses.stream()
+                .filter(dress -> {
+                    if (shopNameContains != null && !shopNameContains.trim().isEmpty()) {
+                        // 부분 일치
+                        return dress.getShopName().toLowerCase().contains(shopNameContains.toLowerCase());
+                    }
+                    return true;
+                })
                 .map(DressResponse::from)
                 .collect(Collectors.toList());
     }
