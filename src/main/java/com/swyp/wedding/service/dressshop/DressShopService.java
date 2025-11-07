@@ -89,5 +89,12 @@ public class DressShopService {
                 .map(DressShopResponse::from)
                 .collect(Collectors.toList());
     }
+    
+    // 등록일 기준 최신순으로 전체 드레스샵 조회
+    public List<DressShopResponse> getAllDressShopsOrderByNewest() {
+        return dressShopRepository.findAllByOrderByRegDtDesc().stream()
+                .map(DressShopResponse::from)
+                .collect(Collectors.toList());
+    }
 
 }

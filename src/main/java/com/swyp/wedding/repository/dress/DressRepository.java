@@ -17,4 +17,7 @@ public interface DressRepository extends JpaRepository<Dress, Long> {
     
     // shopName으로 드레스들 조회 (부분 일치)
     List<Dress> findByShopNameContainingIgnoreCase(String shopName);
+    
+    // 등록일 기준 최신순으로 전체 드레스 조회
+    List<Dress> findAllByOrderByRegDtDesc();
 }
