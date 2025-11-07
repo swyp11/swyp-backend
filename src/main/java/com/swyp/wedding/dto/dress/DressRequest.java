@@ -13,7 +13,7 @@ public class DressRequest {
     private String priceRange;      
     private DressEnum.Length length;        
     private DressEnum.Season season;   
-    private String brand;           
+    private String shopName;        // DressShop의 shopName (필수)
     private String designer;        
     private DressEnum.Type type;            
     private DressEnum.Neckline neckLine;     
@@ -28,8 +28,8 @@ public class DressRequest {
                 .shape(shape)
                 .priceRange(priceRange)
                 .length(length)
-                .season(season)             
-                .brand(brand)
+                .season(season)
+                .shopName(shopName)             
                 .designer(designer)
                 .type(type)              
                 .neckLine(neckLine)       

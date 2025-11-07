@@ -37,6 +37,11 @@ public class DressService {
     // 새 드레스 생성
     @Transactional
     public DressResponse createDress(DressRequest request) {
+        // shopName 기본 검증만
+        if (request.getShopName() == null || request.getShopName().trim().isEmpty()) {
+            throw new RuntimeException("Shop Name은 필수입니다.");
+        }
+        
         Dress dress = request.toEntity();
         Dress savedDress = dressRepository.save(dress);
         return DressResponse.from(savedDress);
@@ -57,12 +62,13 @@ public class DressService {
                 .priceRange(request.getPriceRange())
                 .length(request.getLength())
                 .season(request.getSeason())
-                .brand(request.getBrand())
+                .shopName(request.getShopName() != null ? request.getShopName() : existingDress.getShopName())
                 .designer(request.getDesigner())
                 .type(request.getType())
                 .neckLine(request.getNeckLine())
                 .mood(request.getMood())
                 .fabric(request.getFabric())
+                .features(request.getFeatures())
                 .regDt(existingDress.getRegDt())  // 생성 시간은 유지
                 .build();
 
@@ -82,5 +88,29 @@ public class DressService {
     // 드레스 총 개수 조회
     public long getDressCount() {
         return dressRepository.count();
+    }
+    
+    // shopName별 드레스 검색 (정확한 이름)
+    public List<DressResponse> getDressesByShopName(String shopName) {
+        return dressRepository.findByShopName(shopName)
+                .stream()
+                .map(DressResponse::from)
+                .collect(Collectors.toList());
+    }
+    
+    // shopName별 드레스 검색 (부분 일치)
+    public List<DressResponse> getDressesByShopNameContaining(String shopName) {
+        return dressRepository.findByShopNameContainingIgnoreCase(shopName)
+                .stream()
+                .map(DressResponse::from)
+                .collect(Collectors.toList());
+    }
+    
+    // 등록일 기준 최신순으로 전체 드레스 조회
+    public List<DressResponse> getAllDressesOrderByNewest() {
+        return dressRepository.findAllByOrderByRegDtDesc()
+                .stream()
+                .map(DressResponse::from)
+                .collect(Collectors.toList());
     }
 }
