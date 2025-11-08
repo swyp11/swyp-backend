@@ -5,6 +5,7 @@ import com.swyp.wedding.entity.hall.Hall;
 import com.swyp.wedding.entity.hall.HallType;
 import com.swyp.wedding.entity.hall.LightType;
 import com.swyp.wedding.entity.user.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,11 @@ public class HallRepositoryTest {
     @Autowired
     private HallRepository hallRepository;
 
-    @DisplayName("레포지토리 정상 동작 테스트를 진행합니다.")
-    @Test
-    void saveAndFindTest() {
-        // given
+    private HallRequest request;
+
+    @BeforeEach
+    void setup() {
+        request = new HallRequest();
         String name = "루미에르 홀";
         int capacityMin = 80;
         int capacityMax = 220;
@@ -41,7 +43,6 @@ public class HallRepositoryTest {
         boolean status = true;
         String desc = "자연광 + 샹들리에";
 
-        HallRequest request = new HallRequest();
         request.setName(name);
         request.setCapacityMin(capacityMin);
         request.setCapacityMax(capacityMax);
@@ -56,8 +57,14 @@ public class HallRepositoryTest {
         request.setPillar(pillar);
         request.setStatus(status);
         request.setDesc(desc);
+    }
 
+    @DisplayName("레포지토리 정상 동작 테스트를 진행합니다.")
+    @Test
+    void saveAndFindTest() {
+        // given
         Hall hall = request.toEntity();
+
         // when
         hallRepository.save(hall);
 
@@ -79,9 +86,24 @@ public class HallRepositoryTest {
         assertThat(result.isStage()).isTrue();
         assertThat(result.isLedWall()).isFalse();
         assertThat(result.isStatus()).isTrue();
-        assertThat(result.getDesc()).isEqualTo("자연광 + 샹들리에");
+        assertThat(result.getDescription()).isEqualTo("자연광 + 샹들리에");
 
         assertThat(result.getRegDt()).isNotNull();
         assertThat(result.getUpdateDt()).isNotNull();
+    }
+
+    @DisplayName("데이터 삭제 테스트를 진행합니다.")
+    @Test
+    void deleteTest() {
+        // given
+        Hall hall = request.toEntity();
+
+        // when
+        hallRepository.save(hall);
+        hallRepository.deleteById(1L);
+
+        // then
+        assertThat(hallRepository.findById(1L)).isEmpty();
+
     }
 }
