@@ -43,6 +43,6 @@ class HallTest {
         assertThat(hall.isStage()).isTrue();
         assertThat(hall.isLedWall()).isFalse();
         assertThat(hall.isStatus()).isTrue();
-        assertThat(hall.getDesc()).isEqualTo("창가 자연광, 대형 샹들리에");
+        assertThat(hall.getDescription()).isEqualTo("창가 자연광, 대형 샹들리에");
     }
 }
