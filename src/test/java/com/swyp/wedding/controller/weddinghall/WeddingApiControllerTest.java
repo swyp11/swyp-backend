@@ -5,7 +5,8 @@ import com.swyp.wedding.dto.weddinghall.WeddingHallRequest;
 import com.swyp.wedding.dto.weddinghall.WeddingHallResponse;
 import com.swyp.wedding.entity.weddinghall.WeddingHall;
 import com.swyp.wedding.entity.weddinghall.WeddingHallEnum;
-import com.swyp.wedding.service.weddinghall.WeddingHallServiceImpl;
+import com.swyp.wedding.service.weddinghall.impl.WeddingHallServiceImpl;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
