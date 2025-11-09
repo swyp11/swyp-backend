@@ -10,6 +10,7 @@ import com.swyp.wedding.service.likes.LikesService;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.swyp.wedding.repository.likes.LikesRepository;
@@ -53,4 +54,17 @@ public class LikesServiceImpl implements LikesService {
     }
 
     // 해당 찜 취소
+    @Override
+    public boolean deleteLikes(Long id) {
+        // 없는 정보에 대한 예외처리 만들 예정 (고도화 때)
+         if (!likesRepository.existsById(id))
+            return false;
+
+        try {
+            likesRepository.deleteById(id);
+            return true;
+        } catch (DataIntegrityViolationException e) {
+            return false;
+        }
+    }
 }
