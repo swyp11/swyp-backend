@@ -34,8 +34,7 @@
  import static org.mockito.ArgumentMatchers.anyString;
  import static org.mockito.BDDMockito.given;
  import static org.mockito.Mockito.when;
- import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
- import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
  import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -106,5 +105,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.result").value(false));
+    }
+
+    @DisplayName("Delete /api/likes/{id} - 찜 목록 제거")
+    @Test
+    void deleteLikesTest() throws Exception {
+        // given
+        when(likesService.deleteLikes(anyLong())).thenReturn(true);
+
+        // when & then
+        mockMvc.perform(delete("/api/likes/{id}", 1L)
+                        .principal(() -> "testUser"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.result").value(true));
     }
  }
