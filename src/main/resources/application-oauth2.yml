@@ -4,15 +4,16 @@ spring:
       client:
         registration:
           google:
-            client-name: fitwedding_client
-            client-id: 111459753848-t1rk1bh3s5no6f29ejhai17soon2buo4.apps.googleusercontent.com
-            client-secret:
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            client-name: ${OAUTH2_CLIENT_NAME:fitwedding_client}
+            client-id: ${OAUTH2_GOOGLE_CLIENT_ID}
+            client-secret: ${OAUTH2_GOOGLE_CLIENT_SECRET}
+            redirect-uri: ${OAUTH2_GOOGLE_REDIRECT_URI:http://localhost:8080/login/oauth2/code/google}
             authorization-grant-type: authorization_code
             scope:
               - profile
               - email
 
   jwt:
-    secret: "dsdfegsetahrfhtrysfhewwaadffffxxxbbbbbggfgjfssdfh"
+    secret: ${JWT_SECRET}
+    expiration: ${JWT_EXPIRATION}
 
