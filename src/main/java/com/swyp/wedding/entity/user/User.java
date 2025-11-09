@@ -17,7 +17,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String userId;
+    private String userId; //내부 로그인용 ID (일반회원: 직접입력 / 소셜회원: provider_providerId)
 
     private String password;
 
@@ -32,6 +32,8 @@ public class User {
     private String email;
 
     private String provider;     // google, kakao...등
+
+    private String providerId;  // 각 플랫폼의 고유 ID (sub, id 등)
 
     @Enumerated(EnumType.STRING)
     private UserEnum auth;
