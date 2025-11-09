@@ -3,6 +3,7 @@ package com.swyp.wedding.dto.hall;
 import com.swyp.wedding.entity.hall.Hall;
 import com.swyp.wedding.entity.hall.HallType;
 import com.swyp.wedding.entity.hall.LightType;
+import com.swyp.wedding.entity.map.HallLikesMap;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Data;
@@ -30,6 +31,7 @@ public class HallRequest {
     private String description;
     private LocalDateTime regDt;
     private LocalDateTime updateDt;
+    private HallLikesMap hallLikesMap;
 
     public Hall toEntity() {
         return Hall.builder()
