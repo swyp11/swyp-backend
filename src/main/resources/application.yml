@@ -5,39 +5,6 @@ spring:
     username: swyp
     password: swyp2025
 
-  jwt:
-    secret: "dsdfegsetahrfhtrysfhewwaadffffxxxbbbbbggfgjfssdfh"
-
-oauth:
-  google:
-    client-id: 111459753848-t1rk1bh3s5no6f29ejhai17soon2buo4.apps.googleusercontent.com
-    client-secret:
-    token-uri: https://oauth2.googleapis.com/token
-    userinfo-uri: https://www.googleapis.com/oauth2/v2/userinfo
-
-  #spring:
-#  datasource:
-#    driver-class-name: org.h2.Driver
-#    url: 'jdbc:h2:mem:tmp'   # H2 DB ?? ?? (In-Memory Mode)
-#    #url: 'jdbc:h2:~/test'    # H2 DB ?? ?? (Embedded Mode)
-#    username: user
-#    password:
-#  h2:
-#    console:
-#      enabled: true
-#      path: /h2-console
-#      setting:
-#        web-allow-other: true
-
-#  jpa:
-#    database-platform: org.hibernate.dialect.H2Dialect
-#    hibernate:
-#      ddl-auto: create
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.H2Dialect
-#        format_sql: true
-#        show_sql: true
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
@@ -47,6 +14,16 @@ oauth:
         format_sql: true
         show_sql: true
         jdbc.time_zone: Asia/Seoul
+
+  jwt:
+    secret: "dsdfegsetahrfhtrysfhewwaadffffxxxbbbbbggfgjfssdfh"
+
+oauth:
+  google:
+    client-id: 111459753848-t1rk1bh3s5no6f29ejhai17soon2buo4.apps.googleusercontent.com
+    client-secret:
+    token-uri: https://oauth2.googleapis.com/token
+    userinfo-uri: https://www.googleapis.com/oauth2/v2/userinfo
 
 
 # Springdoc OpenAPI (Swagger) Configuration

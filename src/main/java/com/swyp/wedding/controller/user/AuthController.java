@@ -1,6 +1,7 @@
 package com.swyp.wedding.controller.user;
 
 
+import com.swyp.wedding.dto.auth.LoginRequest;
 import com.swyp.wedding.dto.auth.OAuthCodeRequest;
 import com.swyp.wedding.dto.auth.TokenResponse;
 import com.swyp.wedding.service.AuthService;
@@ -24,5 +25,14 @@ public class AuthController {
                                                      @RequestBody OAuthCodeRequest auth){
         TokenResponse jwtToken = authService.processOAuthLogin(provider, auth.getCode(), auth.getRedirectUri());
         return ResponseEntity.ok(jwtToken);
+    }
+
+    // 일반 로그인
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        TokenResponse tokenResponse = authService.login(loginRequest);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + tokenResponse.getAccessToken())
+                .build();
     }
 }
