@@ -28,7 +28,7 @@ class HallTest {
         ReflectionTestUtils.setField(hall, "ceilingHeight", new BigDecimal("6.2"));
         ReflectionTestUtils.setField(hall, "aisleLength", new BigDecimal("18.0"));
         ReflectionTestUtils.setField(hall, "pillar", true);
-        ReflectionTestUtils.setField(hall, "desc", "창가 자연광, 대형 샹들리에");
+        ReflectionTestUtils.setField(hall, "description", "창가 자연광, 대형 샹들리에");
 
         // then
         assertThat(hall.getName()).isEqualTo("루미에르 홀");
