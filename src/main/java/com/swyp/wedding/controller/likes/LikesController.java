@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Map;
@@ -32,5 +29,14 @@ public class LikesController {
         String userId = principal.getName();
 
         return ResponseEntity.ok(Map.of("result", likesService.storeLikes(category, postId, userId)));
+    }
+
+    @Operation(summary = "사용자가 특정 게시물 좋아요(찜)를 제거합니다.")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> deleteLikes(@PathVariable Long id,
+                                                          @AuthenticationPrincipal Principal principal) {
+        // 임의 유저 id 설정
+        // 추후 계정 없는 것에 대한 예외처리 기능 만들 예정 (고도화 때)
+        return ResponseEntity.ok(Map.of("result", likesService.deleteLikes(id)));
     }
 }
