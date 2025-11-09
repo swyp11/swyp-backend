@@ -40,22 +40,32 @@ public class AuthService {
         // 2. 공통 인터페이스로 사용자 정보 가져오기
         OAuthUserInfo userInfo = oAuthClient.getUserInfo(code, redirectUri);
 
-        // 3. DB 조회 또는 신규 회원 등록
-        User user = userRepository.findByEmail(userInfo.getEmail())
-                .orElseGet(() -> registerNewUser(userInfo, provider));
+        // 콘솔 확인 용
+//        System.out.println("✅ Provider: " + userInfo.getProvider());
+//        System.out.println("✅ ProviderId: " + userInfo.getProviderId());
+//        System.out.println("✅ Email: " + userInfo.getEmail());
+//        System.out.println("✅ Name: " + userInfo.getName());
+
+        // 3. DB 조회 또는 신규 회원 등록 -
+        User user = userRepository.findByProviderAndProviderId(userInfo.getProvider(), userInfo.getProviderId())
+                .orElseGet(()-> registerNewUser(userInfo));
 
         // 4️. JWT 발급 후 반환
         String accessToken = jwtUtil.createToken(user.getUserId(), user.getAuth().name());
-        return new TokenResponse(accessToken);
+        return TokenResponse.of(accessToken);
     }
 
     // 신규 회원 등록
-    private User registerNewUser(OAuthUserInfo userInfo, String provider) {
+    private User registerNewUser(OAuthUserInfo userInfo) {
+        String generatedUserId = userInfo.getProvider() + "_" + userInfo.getProviderId();
+
         User newUser = User.builder()
+                .userId(generatedUserId)
                 .email(userInfo.getEmail())
                 .name(userInfo.getName())
                 .auth(UserEnum.USER)
-                .provider(provider)
+                .provider(userInfo.getProvider())
+                .providerId(userInfo.getProviderId())
                 .build();
 
         return userRepository.save(newUser);
@@ -85,7 +95,7 @@ public class AuthService {
             String token = jwtUtil.createToken(username, role);
 
             // 4. 응답 객체 반환
-            return new TokenResponse(token);
+            return TokenResponse.of(token);
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException("잘못된 아이디/비밀번호입니다.");
         } catch (UsernameNotFoundException e) {
