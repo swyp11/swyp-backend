@@ -68,4 +68,16 @@ public class LikesRepositoryTest {
         assertThat(result.getTargetId()).isEqualTo(1L);
         assertThat(result.getUpdateDt()).isNotNull();
     }
+
+    @DisplayName("데이터 삭제 테스트를 진행합니다.")
+    @Test
+    void deleteTest() {
+        // when
+        likesRepository.save(testLikes);
+        likesRepository.deleteById(testLikes.getId());
+
+        // then
+        assertThat(likesRepository.findById(testLikes.getId())).isEmpty();
+
+    }
 }
