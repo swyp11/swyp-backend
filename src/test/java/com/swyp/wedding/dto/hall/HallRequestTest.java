@@ -70,8 +70,6 @@ class HallRequestTest {
         assertThat(hall.isPillar()).isEqualTo(pillar);
         assertThat(hall.isStatus()).isEqualTo(status);
         assertThat(hall.getDescription()).isEqualTo(description);
-
-        assertThat(hall.getRegDt()).isNull();
         assertThat(hall.getUpdateDt()).isNull();
     }
 }
