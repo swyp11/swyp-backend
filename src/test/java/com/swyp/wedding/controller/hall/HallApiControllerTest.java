@@ -1,5 +1,6 @@
 package com.swyp.wedding.controller.hall;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swyp.wedding.dto.hall.HallRequest;
 import com.swyp.wedding.dto.hall.HallResponse;
 import com.swyp.wedding.dto.weddinghall.WeddingHallRequest;
@@ -35,16 +36,19 @@ import com.swyp.wedding.service.hall.HallService;
 import com.swyp.wedding.service.hall.impl.HallServiceImpl;
 
 @WebMvcTest(HallApiController.class)
-@DisplayName("WeddingApiController 테스트")
+@DisplayName("HallApiController 테스트")
 public class HallApiControllerTest {
 
-        @Autowired
-        private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-        @MockBean
-        private HallServiceImpl hallService;
+    @MockBean
+    private HallServiceImpl hallService;
 
         private HallRequest request;
+
+        @Autowired
+        private ObjectMapper objectMapper;
 
         private HallResponse testResponse1;
         private HallResponse testResponse2;
@@ -110,14 +114,14 @@ public class HallApiControllerTest {
         }
 
         @Test
-        @DisplayName("GET /api/wedding - 웨딩홀 리스트 조회 성공")
+        @DisplayName("GET /api/hall - 웨딩홀 리스트 조회 성공")
         void getWeddings_Success() throws Exception {
                 // given
                 List<HallResponse> responses = Arrays.asList(testResponse1, testResponse2);
                 given(hallService.getHallInfos()).willReturn(responses);
 
                 // when & then
-                mockMvc.perform(get("/api/wedding"))
+                mockMvc.perform(get("/api/hall"))
                                 .andDo(print())
                                 .andExpect(status().isOk())
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -136,13 +140,13 @@ public class HallApiControllerTest {
         }
 
         @Test
-        @DisplayName("GET /api/wedding - 빈 리스트 조회")
+        @DisplayName("GET /api/hall - 빈 리스트 조회")
         void getWeddings_EmptyList() throws Exception {
                 // given
-                given(weddingHallService.getWeddingInfos()).willReturn(Arrays.asList());
+                given(hallService.getHallInfos()).willReturn(Arrays.asList());
 
                 // when & then
-                mockMvc.perform(get("/api/wedding"))
+                mockMvc.perform(get("/api/hall"))
                                 .andDo(print())
                                 .andExpect(status().isOk())
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -151,14 +155,14 @@ public class HallApiControllerTest {
         }
 
         @Test
-        @DisplayName("GET /api/wedding - 웨딩홀 상세정보 조회")
+        @DisplayName("GET /api/hall - 웨딩홀 상세정보 조회")
         void getWeddingInfo_Success() throws Exception {
                 // given
-                WeddingHallResponse responses = testResponse1;
-                given(weddingHallService.getWeddingInfo(anyLong())).willReturn(responses);
+                HallResponse responses = testResponse1;
+                given(hallService.getHallInfo(anyLong())).willReturn(responses);
 
                 // when & then
-                mockMvc.perform(get("/api/wedding/{id}", 1L))
+                mockMvc.perform(get("/api/hall/{id}", 1L))
                                 .andDo(print())
                                 .andExpect(status().isOk())
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -173,13 +177,13 @@ public class HallApiControllerTest {
         }
 
         @Test
-        @DisplayName("GET /api/wedding - 빈 리스트 조회")
+        @DisplayName("GET /api/hall - 빈 리스트 조회")
         void getWeddingInfo_EmptyList() throws Exception {
                 // given
-                given(weddingHallService.getWeddingInfo(anyLong())).willReturn(new WeddingHallResponse());
+                given(hallService.getHallInfo(anyLong())).willReturn(new HallResponse());
 
                 // when & then
-                mockMvc.perform(get("/api/wedding"))
+                mockMvc.perform(get("/api/hall"))
                                 .andDo(print())
                                 .andExpect(status().isOk())
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -188,14 +192,14 @@ public class HallApiControllerTest {
         }
 
         @Test
-        @DisplayName("POST /api/wedding - 웨딩홀 저장 성공")
+        @DisplayName("POST /api/hall - 웨딩홀 저장 성공")
         void saveWedding_Success() throws Exception {
                 // given
-                given(weddingHallService.saveWedding(any(WeddingHallRequest.class)))
+                given(hallService.saveHall(any(HallRequest.class)))
                                 .willReturn(true);
 
                 // when & then
-                mockMvc.perform(post("/api/wedding")
+                mockMvc.perform(post("/api/hall")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(testRequest)))
                                 .andDo(print())
@@ -205,14 +209,14 @@ public class HallApiControllerTest {
         }
 
         @Test
-        @DisplayName("POST /api/wedding - 웨딩홀 저장 실패 (false 반환)")
+        @DisplayName("POST /api/hall - 웨딩홀 저장 실패 (false 반환)")
         void saveWedding_Failure() throws Exception {
                 // given
-                given(weddingHallService.saveWedding(any(WeddingHallRequest.class)))
+                given(hallService.saveHall(any(HallRequest.class)))
                                 .willReturn(false);
 
                 // when & then
-                mockMvc.perform(post("/api/wedding")
+                mockMvc.perform(post("/api/hall")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(testRequest)))
                                 .andDo(print())
@@ -225,11 +229,11 @@ public class HallApiControllerTest {
         @DisplayName("웨딩홀 정보를 삭제에 성공합니다.")
         void deleteWedding_Success() throws Exception {
                 // given
-                given(weddingHallService.deleteWedding(anyLong()))
+                given(hallService.deleteHall(anyLong()))
                                 .willReturn(true);
 
                 // when & then
-                mockMvc.perform(delete("/api/wedding/{id}", 1L)
+                mockMvc.perform(delete("/api/hall/{id}", 1L)
                                 .contentType(MediaType.APPLICATION_JSON))
                                 .andDo(print())
                                 .andExpect(status().isOk())
@@ -241,11 +245,11 @@ public class HallApiControllerTest {
         @DisplayName("웨딩홀 정보 삭제에 실패합니다.")
         void deleteWedding_Failure() throws Exception {
                 // given
-                given(weddingHallService.deleteWedding(anyLong()))
+                given(hallService.deleteHall(anyLong()))
                                 .willReturn(false);
 
                 // when & then
-                mockMvc.perform(delete("/api/wedding/{id}", 1L)
+                mockMvc.perform(delete("/api/hall/{id}", 1L)
                                 .contentType(MediaType.APPLICATION_JSON))
                                 .andDo(print())
                                 .andExpect(status().isOk())
