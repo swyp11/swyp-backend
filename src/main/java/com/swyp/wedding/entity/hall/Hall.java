@@ -1,5 +1,6 @@
 package com.swyp.wedding.entity.hall;
 
+import com.swyp.wedding.entity.map.HallLikesMap;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
@@ -67,6 +68,10 @@ public class Hall {
 
     @Comment("업데이트 일자")
     private LocalDateTime updateDt;
+
+    @OneToMany(mappedBy = "hall", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JoinColumn(name = "wedding_hall_likes_map_id")
+    private HallLikesMap weddingHallLikesMap;
 
     // 생성 시 자동으로 시간 설정
     @PrePersist
