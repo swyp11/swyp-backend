@@ -56,7 +56,7 @@ public class HallRepositoryTest {
         request.setAisleLength(aisleLength);
         request.setPillar(pillar);
         request.setStatus(status);
-        request.setDesc(desc);
+        request.setDescription(desc);
     }
 
     @DisplayName("레포지토리 정상 동작 테스트를 진행합니다.")
