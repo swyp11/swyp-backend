@@ -1,6 +1,5 @@
 package com.swyp.wedding.config;
 
-import com.swyp.wedding.security.jwt.JwtAuthenticationFilter;
 import com.swyp.wedding.security.jwt.JwtFilter;
 import com.swyp.wedding.security.jwt.JwtProvider;
 import com.swyp.wedding.security.jwt.JwtUtil;
@@ -21,8 +20,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    //AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체
-    private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
     private final JwtProvider jwtProvider;
 
@@ -77,12 +74,7 @@ public class SecurityConfig {
 
         //JWTFilter 등록
         http
-                .addFilterBefore(new JwtFilter(jwtUtil, jwtProvider), JwtAuthenticationFilter.class);
-
-
-        //필터 추가 JwtAuthenticationFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
-        http
-                .addFilterAt(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtFilter(jwtUtil, jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
 
         //세션 설정💡
