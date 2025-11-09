@@ -10,10 +10,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.verify;
+
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.swyp.wedding.entity.likes.Likes;
@@ -180,5 +183,57 @@ class LikesServiceImplTest {
         assertFalse(result);
         verify(userRepository).findByUserId(userId);
         verify(likesRepository).save(any(Likes.class));
+    }
+
+    @DisplayName("찜 목록 제거에 성공합니다.")
+    @Test
+    void storeDelete_success() {
+        // given
+        Long id = 1L;
+
+        when(likesRepository.existsById(anyLong())).thenReturn(true);
+        doNothing().when(likesRepository).deleteById(id);
+
+        // when
+        boolean result = likesService.deleteLikes(id);
+
+        // then
+        assertTrue(result);
+        verify(likesRepository).existsById(id);
+        verify(likesRepository).deleteById(anyLong());
+    }
+
+    @DisplayName("존재하지 ID로 인한 찜 목록 제거 실패입니다.")
+    @Test
+    void storeDelete_Fail_Not_Exist_Id() {
+        // given
+        Long id = 9999L;
+
+        when(likesRepository.existsById(anyLong())).thenReturn(false);
+
+        // when
+        boolean result = likesService.deleteLikes(id);
+
+        // then
+        assertFalse(result);
+        verify(likesRepository).existsById(id);
+    }
+
+    @DisplayName("데이터베이스 저장 오류로 인한 찜 목록 제거 실패입니다.")
+    @Test
+    void storeDelete_Fail_DatabaseError() {
+        // given
+        Long id = 1L;
+
+        when(likesRepository.existsById(anyLong())).thenReturn(true);
+        doThrow(new RuntimeException("Database error")).when(likesRepository).deleteById(anyLong());
+
+        // when
+        boolean result = likesService.deleteLikes(id);
+
+        // then
+        assertFalse(result);
+        verify(likesRepository).existsById(id);
+        verify(likesRepository).deleteById(anyLong());
     }
 }
