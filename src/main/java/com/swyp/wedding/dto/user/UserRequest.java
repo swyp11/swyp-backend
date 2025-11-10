@@ -2,6 +2,7 @@ package com.swyp.wedding.dto.user;
 
 import com.swyp.wedding.entity.user.User;
 import com.swyp.wedding.entity.user.UserEnum;
+import com.swyp.wedding.entity.user.WeddingRole;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ public class UserRequest {
     private String provider;
     private String providerId;
     private UserEnum auth;
-    private String weddingRole;
+    private WeddingRole weddingRole;
 
     // 현재 미사용
     private String phoneNumber;

@@ -1,6 +1,6 @@
 package com.swyp.wedding.dto.user;
 
-import com.swyp.wedding.entity.user.UserEnum;
+import com.swyp.wedding.entity.user.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class UserResponse {
     private String provider;
     private String providerId;
     private UserEnum auth;
-    private String weddingRole;
+    private WeddingRole weddingRole;
 
     // 현재 미사용
     private String phoneNumber;
