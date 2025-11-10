@@ -24,7 +24,9 @@ public class AuthController {
     public ResponseEntity<TokenResponse> OAuthLogin(@PathVariable String provider,
                                                      @RequestBody OAuthCodeRequest auth){
         TokenResponse jwtToken = authService.processOAuthLogin(provider, auth.getCode(), auth.getRedirectUri());
-        return ResponseEntity.ok(jwtToken);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " +jwtToken.getAccessToken())
+                .build();
     }
 
     // 일반 로그인
