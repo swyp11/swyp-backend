@@ -62,7 +62,6 @@ public class AuthService {
         User newUser = User.builder()
                 .userId(generatedUserId)
                 .email(userInfo.getEmail())
-                .name(userInfo.getName())
                 .auth(UserEnum.USER)
                 .provider(userInfo.getProvider())
                 .providerId(userInfo.getProviderId())

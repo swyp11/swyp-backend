@@ -1,10 +1,10 @@
 package com.swyp.wedding.entity.user;
 
+import com.swyp.wedding.dto.auth.OAuthExtraInfoRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Table(name = "tb_user")
@@ -21,13 +21,11 @@ public class User {
 
     private String password;
 
-    private String name;
+    private String nickname;
 
-    private LocalDate birth;
+    private LocalDate birth; // 생년월일
 
-    private String phoneNumber;
-
-    private String address;
+    private LocalDate weddingDate; // 결혼식 날짜
 
     private String email;
 
@@ -37,4 +35,19 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private UserEnum auth;
+
+    private String weddingRole; // 신랑 신부
+
+
+    // 아래 두 컬럼 현재 필요 없음.
+    private String phoneNumber;
+    private String address;
+
+
+    public void updateExtraInfo(OAuthExtraInfoRequest extraInfoRequest) {
+        this.nickname = extraInfoRequest.getNickname();
+        this.birth = getBirth();
+        this.weddingDate = getWeddingDate();
+        this.weddingRole = getWeddingRole();
+    }
 }
