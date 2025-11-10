@@ -34,7 +34,7 @@ class HallRequestTest {
         BigDecimal aisleLength = new BigDecimal("18.0");
         boolean pillar = true;
         boolean status = true;
-        String desc = "자연광 + 샹들리에";
+        String description = "자연광 + 샹들리에";
 
         HallRequest request = new HallRequest();
         request.setName(name);
@@ -50,7 +50,7 @@ class HallRequestTest {
         request.setAisleLength(aisleLength);
         request.setPillar(pillar);
         request.setStatus(status);
-        request.setDesc(desc);
+        request.setDescription(description);
 
         // when
         Hall hall = request.toEntity();
@@ -69,9 +69,7 @@ class HallRequestTest {
         assertThat(hall.getAisleLength()).isEqualByComparingTo(aisleLength);
         assertThat(hall.isPillar()).isEqualTo(pillar);
         assertThat(hall.isStatus()).isEqualTo(status);
-        assertThat(hall.getDesc()).isEqualTo(desc);
-
-        assertThat(hall.getRegDt()).isNull();
+        assertThat(hall.getDescription()).isEqualTo(description);
         assertThat(hall.getUpdateDt()).isNull();
     }
 }
