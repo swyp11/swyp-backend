@@ -36,7 +36,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserEnum auth;
 
-    private String weddingRole; // 신랑 신부
+    @Enumerated(EnumType.STRING)
+    private WeddingRole weddingRole; // 신랑 신부
 
 
     // 아래 두 컬럼 현재 필요 없음.
