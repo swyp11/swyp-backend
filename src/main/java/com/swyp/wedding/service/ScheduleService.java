@@ -46,6 +46,7 @@ public class ScheduleService {
     }
 
     // 월별 조회
+    @Transactional(readOnly = true)
     public List<ScheduleMonthResponse> getMonthEvents(String username, int year, int month) {
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
@@ -56,6 +57,7 @@ public class ScheduleService {
     }
 
     // 주별 조회
+    @Transactional(readOnly = true)
     public List<ScheduleWeekResponse> getWeekEvents(String username, LocalDate startDate) {
         // 7일 범위 자동 계산
         LocalDate endDate = startDate.plusDays(6);
@@ -66,6 +68,7 @@ public class ScheduleService {
     }
 
     // 일별 조회
+    @Transactional(readOnly = true)
     public List<ScheduleResponse> getDayEvents(String username, LocalDate date) {
         return scheduleRepository.findByUser_UserIdAndStartDate(username,date)
                 .stream()
