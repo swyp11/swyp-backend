@@ -1,38 +1,43 @@
 package com.swyp.wedding.dto.user;
 
-import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-
-import java.time.LocalDate;
-
 import com.swyp.wedding.entity.user.User;
 import com.swyp.wedding.entity.user.UserEnum;
+import lombok.Data;
+
+import java.time.LocalDate;
 
 @Data
 public class UserRequest {
     private Long id;
     private String userId;
     private String password;
-    private String name;
+    private String nickname;
     private LocalDate birth;
-    private String phoneNumber;
-    private String address;
+    private LocalDate weddingDate;
     private String email;
     private String provider;
+    private String providerId;
     private UserEnum auth;
+    private String weddingRole;
+
+    // 현재 미사용
+    private String phoneNumber;
+    private String address;
 
     public User toEntity() {
         return User.builder()
                 .userId(userId)
                 .password(password)
-                .name(name)
+                .nickname(nickname)
                 .birth(birth)
+                .weddingDate(weddingDate)
                 .phoneNumber(phoneNumber)
                 .address(address)
                 .email(email)
                 .provider(provider)
+                .providerId(providerId)
                 .auth(auth)
+                .weddingRole(weddingRole)
                 .build();
     }
 }
