@@ -83,6 +83,7 @@ public class JoinService {
                 .auth(user.getAuth())
                 .nickname(user.getNickname())
                 .weddingDate(user.getWeddingDate())
+                .weddingRole(user.getWeddingRole())
                 .build();
     }
 }
