@@ -4,6 +4,10 @@ spring:
     url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:swyp_test}?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: ${JWT_EXPIRATION:3600000}
 #spring:
 #  datasource:
 #    driver-class-name: org.h2.Driver
