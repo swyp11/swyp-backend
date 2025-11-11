@@ -65,6 +65,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         // 인증이 필요없는 경로
                         .requestMatchers("/", "/login", "/join" ,"/home", "/logout","/oauth/**" ,"/calendar/**" ).permitAll()
+                        // Swagger UI 관련 엔드포인트
+                        .requestMatchers("/api/swagger-ui/**", "/api-docs/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         // TODO 관리자의 경우
                         .requestMatchers("/admin").hasRole("ADMIN")
                         // 로그인한 유저의 경우
