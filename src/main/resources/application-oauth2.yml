@@ -17,3 +17,10 @@ spring:
     secret: ${JWT_SECRET}
     expiration: ${JWT_EXPIRATION}
 
+oauth:
+  google:
+    client-id: ${OAUTH2_GOOGLE_CLIENT_ID}
+    client-secret: ${OAUTH2_GOOGLE_CLIENT_SECRET}
+    token-uri: ${OAUTH2_GOOGLE_TOKEN_URI:https://oauth2.googleapis.com/token}
+    userinfo-uri: ${OAUTH2_GOOGLE_USERINFO_URI:https://www.googleapis.com/oauth2/v3/userinfo}
+
