@@ -65,6 +65,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         // 인증이 필요없는 경로
                         .requestMatchers("/", "/login", "/join" ,"/home", "/logout","/oauth/**" ,"/calendar/**" ).permitAll()
+                        // Swagger UI 관련 엔드포인트
+                        .requestMatchers("/api/swagger-ui/**", "/api-docs/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(("/join/oAuth/extra-info")).authenticated() // 소셜 로그인 후 추가 정보 삽입 과정
                         // TODO 관리자의 경우
                         .requestMatchers("/admin").hasRole("ADMIN")
