@@ -19,6 +19,7 @@ public class UserRequest {
     private String phoneNumber;
     private String address;
     private String email;
+    private String provider;
     private UserEnum auth;
 
     public User toEntity() {
@@ -30,6 +31,7 @@ public class UserRequest {
                 .phoneNumber(phoneNumber)
                 .address(address)
                 .email(email)
+                .provider(provider)
                 .auth(auth)
                 .build();
     }
