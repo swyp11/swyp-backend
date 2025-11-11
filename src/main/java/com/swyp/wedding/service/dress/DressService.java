@@ -8,9 +8,12 @@ import com.swyp.wedding.dto.dress.DressRequest;
 import com.swyp.wedding.dto.dress.DressResponse;
 import com.swyp.wedding.entity.common.SortType;
 import com.swyp.wedding.entity.dress.Dress;
+import com.swyp.wedding.entity.likes.LikesType;
 import com.swyp.wedding.repository.dress.DressRepository;
+import com.swyp.wedding.repository.likes.LikesRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 public class DressService {
 
     private final DressRepository dressRepository;
+    private final LikesRepository likesRepository;
 
     // 특정 드레스 조회
     public DressResponse getDressById(Long id) {
@@ -94,9 +98,29 @@ public class DressService {
         if (sort == SortType.RECENT) {
             dresses = dressRepository.findAllByOrderByRegDtDesc();
         } else if (sort == SortType.FAVORITE) {
-            // TODO: 추후 찜순 정렬 로직 구현
-            // 현재는 기본 정렬로 처리
-            dresses = dressRepository.findAll();
+            // tb_likes 테이블에서 likes_type = 'DRESS'인 항목들을 집계하여 좋아요가 많은 순서대로 ID 목록 가져오기
+            List<Object[]> likesCounts = likesRepository.findTargetIdsByLikesTypeOrderByCountDesc(LikesType.DRESS);
+            
+            // target_id(Dress의 id) 목록 추출
+            List<Long> sortedIds = likesCounts.stream()
+                    .map(arr -> (Long) arr[0])
+                    .collect(Collectors.toList());
+            
+            // 전체 Dress 조회 후 좋아요 순서에 맞게 정렬
+            List<Dress> allDresses = dressRepository.findAll();
+            Map<Long, Dress> dressMap = allDresses.stream()
+                    .collect(Collectors.toMap(Dress::getId, dress -> dress));
+            
+            // 좋아요가 있는 드레스들을 먼저 정렬된 순서로 추가
+            dresses = sortedIds.stream()
+                    .map(dressMap::get)
+                    .filter(dress -> dress != null)
+                    .collect(Collectors.toList());
+            
+            // 좋아요가 없는 나머지 드레스들 추가
+            allDresses.stream()
+                    .filter(dress -> !sortedIds.contains(dress.getId()))
+                    .forEach(dresses::add);
         } else {
             dresses = dressRepository.findAll();
         }
