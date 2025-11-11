@@ -1,10 +1,10 @@
-package com.swyp.wedding.dto.dressshop;
+package com.swyp.wedding.dto.makeupshop;
 
 import lombok.Data;
-import com.swyp.wedding.entity.dressshop.DressShop;
+import com.swyp.wedding.entity.makeupshop.MakeupShop;
 
 @Data
-public class DressShopRequest {
+public class MakeupShopRequest {
     private Long id;
     private String shopName;        // 샵 이름
     private String description;     // 샵 설명
@@ -15,8 +15,8 @@ public class DressShopRequest {
     private String specialty;       // 전문분야
     private String features;        // 특징 또는 기타 정보
 
-    public DressShop toEntity() {
-        return DressShop.builder()
+    public MakeupShop toEntity() {
+        return MakeupShop.builder()
                 .shopName(shopName)
                 .description(description)
                 .address(address)
