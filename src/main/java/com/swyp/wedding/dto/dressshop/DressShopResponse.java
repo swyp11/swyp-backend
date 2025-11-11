@@ -13,6 +13,7 @@ public class DressShopResponse {
     private String address;         // 주소
     private String phone;           // 연락처 (전화번호, 카카오톡, 기타 연락 가능한 방법)
     private String snsUrl;          // SNS URL (웹사이트, 인스타그램 등)
+    private String imageUrl;
     private String specialty;       // 전문분야
     private String features;        // 특징 또는 기타 정보
     private LocalDateTime regDt;
@@ -26,6 +27,7 @@ public class DressShopResponse {
         response.setAddress(dressShop.getAddress());
         response.setPhone(dressShop.getPhone());
         response.setSnsUrl(dressShop.getSnsUrl());
+        response.setImageUrl(dressShop.getImageUrl());
         response.setSpecialty(dressShop.getSpecialty());
         response.setFeatures(dressShop.getFeatures());
         response.setRegDt(dressShop.getRegDt());
