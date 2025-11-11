@@ -11,6 +11,7 @@ public class DressShopRequest {
     private String address;         // 주소
     private String phone;           // 연락처 (전화번호, 카카오톡, 기타 연락 가능한 방법)
     private String snsUrl;          // SNS URL (웹사이트, 인스타그램 등)
+    private String imageUrl;
     private String specialty;       // 전문분야
     private String features;        // 특징 또는 기타 정보
 
@@ -21,6 +22,7 @@ public class DressShopRequest {
                 .address(address)
                 .phone(phone)
                 .snsUrl(snsUrl)
+                .imageUrl(imageUrl)
                 .specialty(specialty)
                 .features(features)
                 .build();
