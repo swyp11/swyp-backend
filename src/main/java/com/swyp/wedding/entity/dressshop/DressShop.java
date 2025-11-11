@@ -33,6 +33,9 @@ public class DressShop {
     @Column(name = "sns_url", length = 500)
     private String snsUrl;  // SNS URL (웹사이트, 인스타그램 등)
 
+    @Column(name = "image_url", length = 500)
+    private String imageUrl;  // image URL (웹사이트, 인스타그램 등)
+
     @Column(name = "specialty", length = 200)
     private String specialty;  // 전문분야 (예: 빅사이즈, 프리미엄, 가성비 등)
 
