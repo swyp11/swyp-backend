@@ -49,4 +49,33 @@ public class WeddingHallRepositoryTest {
         assertThat(result.getEmail()).isEqualTo(weddingHall.getEmail());
         assertThat(result.getParking()).isEqualTo(weddingHall.getParking());
     }
+
+    @DisplayName("데이터 삭제 테스트를 진행합니다.")
+    @Test
+    void deleteTest() {
+        // given
+        String testName = "test";
+        WeddingHallEnum testVenueType = WeddingHallEnum.WEDDING_HALL;
+        int testParking = 10;
+        String testAddress = "서울시";
+        String testPhone = "010-1111-1111";
+        String testEmail = "test@test";
+
+        WeddingHall weddingHall = WeddingHall.builder()
+                .name(testName)
+                .venueType(testVenueType)
+                .phone(testPhone)
+                .address(testAddress)
+                .email(testEmail)
+                .parking(testParking)
+                .build();
+
+        // when
+        weddingHallRepository.save(weddingHall);
+        weddingHallRepository.deleteById(1L);
+
+        // then
+        assertThat(weddingHallRepository.findById(1L)).isEmpty();
+
+    }
 }

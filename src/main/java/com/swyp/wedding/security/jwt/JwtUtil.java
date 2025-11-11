@@ -15,11 +15,15 @@ import java.util.Date;
 public class JwtUtil {
 
     private final SecretKey secretKey;
-    private static final long EXPIRATION_MS = 1000L * 60 * 60;
+    private final long expirationMs;
 
-    public JwtUtil(@Value("${spring.jwt.secret}") String secret) {
+    public JwtUtil(
+            @Value("${spring.jwt.secret}") String secret,
+            @Value("${spring.jwt.expiration}") long expirationMs
+    ) {
         // SecretKeySpec 대신 Keys.hmacShaKeyFor 사용 (JJWT 권장 방식)
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.expirationMs = expirationMs;
     }
 
     public String createToken(String username, String role) {
@@ -28,7 +32,7 @@ public class JwtUtil {
                 .claim("username", username)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
+                .expiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(secretKey)
                 .compact();
     }
