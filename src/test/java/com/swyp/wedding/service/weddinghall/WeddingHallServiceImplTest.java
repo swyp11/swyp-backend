@@ -25,6 +25,8 @@ import com.swyp.wedding.dto.weddinghall.WeddingHallResponse;
 import com.swyp.wedding.entity.weddinghall.WeddingHall;
 import com.swyp.wedding.entity.weddinghall.WeddingHallEnum;
 import com.swyp.wedding.repository.weddinghall.WeddingHallRepository;
+import com.swyp.wedding.service.weddinghall.impl.WeddingHallServiceImpl;
+
 import org.springframework.dao.DataIntegrityViolationException;
 
 @ExtendWith(MockitoExtension.class)  // Mock 사용을 위한 확장
