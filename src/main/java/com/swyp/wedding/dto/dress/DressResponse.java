@@ -19,9 +19,10 @@ public class DressResponse {
     private String designer;                    
     private DressEnum.Type type;               
     private DressEnum.Neckline neckLine;        
-    private DressEnum.Mood mood;                
+    private DressEnum.Mood mood;
     private String fabric;  // 여러 원단 타입을 콤마로 구분
-    private String features;  // 특징 또는 기타 컬럼        
+    private String imageUrl;  // image URL
+    private String features;  // 특징 또는 기타 컬럼
     private LocalDateTime regDt;
     private LocalDateTime updateDt;
 
@@ -38,9 +39,10 @@ public class DressResponse {
         response.setDesigner(dress.getDesigner());         
         response.setType(dress.getType());                 
         response.setNeckLine(dress.getNeckLine());    
-        response.setMood(dress.getMood());                 
+        response.setMood(dress.getMood());
         response.setFabric(dress.getFabric());
-        response.setFeatures(dress.getFeatures());           
+        response.setImageUrl(dress.getImageUrl());
+        response.setFeatures(dress.getFeatures());
         response.setRegDt(dress.getRegDt());              
         response.setUpdateDt(dress.getUpdateDt());        
         return response;
