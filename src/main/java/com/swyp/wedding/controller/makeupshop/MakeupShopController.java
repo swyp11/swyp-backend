@@ -56,7 +56,11 @@ public class MakeupShopController {
 
     @Operation(summary = "특정 메이크업샵 조회", description = "ID로 특정 메이크업샵의 상세 정보를 조회합니다. 로그인 시 찜 정보(isLiked)가 포함됩니다.")
     @GetMapping("/{id}")
+<<<<<<< HEAD
     public ResponseEntity<ApiResponse<MakeupShopResponse>> getMakeupShopById(
+=======
+    public ResponseEntity<MakeupShopResponse> getMakeupShopById(
+>>>>>>> ef26183 (feat: 상세보기 api 찜여부 추가)
             @Parameter(description = "메이크업샵 ID", required = true) @PathVariable Long id,
             @AuthenticationPrincipal(errorOnInvalidType = false) CustomUserDetails userDetails) {
 
@@ -64,7 +68,11 @@ public class MakeupShopController {
         String userId = (userDetails != null) ? userDetails.getUsername() : null;
 
         MakeupShopResponse makeupShop = makeupShopService.getMakeupShopById(id, userId);
+<<<<<<< HEAD
         return ResponseEntity.ok(ApiResponse.success(makeupShop));
+=======
+        return ResponseEntity.ok(makeupShop);
+>>>>>>> ef26183 (feat: 상세보기 api 찜여부 추가)
     }
 
     @Operation(summary = "새 메이크업샵 생성", description = "새로운 메이크업샵을 등록합니다.")
