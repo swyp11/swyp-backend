@@ -15,7 +15,7 @@ import com.swyp.wedding.service.dress.DressService;
 
 import java.util.List;
 
-@Tag(name = "Dress", description = "웨딩 드레스 관리 API")
+@Tag(name = "드레스", description = "웨딩 드레스 관리 API")
 @RestController
 @RequestMapping("/api/dress")
 @RequiredArgsConstructor
