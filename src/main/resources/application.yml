@@ -79,4 +79,3 @@ springdoc:
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
 
-
