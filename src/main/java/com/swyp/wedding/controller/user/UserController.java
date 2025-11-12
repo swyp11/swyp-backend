@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "사용자", description = "사용자 관리 API")
 @RestController
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -40,14 +41,14 @@ public class UserController {
     }
 
     @Operation(summary = "사용자 정보 조회", description = "현재 로그인한 사용자의 정보를 조회합니다.")
-    @GetMapping("/user/info")
+    @GetMapping("/info")
     public ResponseEntity<ApiResponse<UserResponse>> getUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
         UserResponse userResponse = userService.getUserInfo(userDetails);
         return ResponseEntity.ok(ApiResponse.success(userResponse));
     }
 
     @Operation(summary = "사용자 정보 수정", description = "현재 로그인한 사용자의 정보를 수정합니다.")
-    @PutMapping("/user/info")
+    @PutMapping("/info")
     public ResponseEntity<ApiResponse<UserResponse>> updateUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                         @RequestBody UserUpdateRequest request) {
         UserResponse userResponse = userService.updateUserInfo(userDetails, request);
