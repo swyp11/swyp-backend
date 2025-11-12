@@ -1,13 +1,14 @@
 package com.swyp.wedding.repository.likes;
 
-import com.swyp.wedding.entity.likes.Likes;
-import com.swyp.wedding.entity.likes.LikesType;
-import com.swyp.wedding.entity.user.User;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.swyp.wedding.entity.likes.Likes;
+import com.swyp.wedding.entity.likes.LikesType;
+import com.swyp.wedding.entity.user.User;
 
 @Repository
 public interface LikesRepository extends JpaRepository<Likes, Long> {
