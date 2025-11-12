@@ -9,7 +9,7 @@ import com.swyp.wedding.entity.common.SortType;
 public interface WeddingHallService {
     List<WeddingHallResponse> getWeddingInfos(SortType sort, String userId);
     boolean saveWedding(WeddingHallRequest request);
-    WeddingHallResponse getWeddingInfo(Long id);
+    WeddingHallResponse getWeddingInfo(Long id, String userId);
     boolean updateWedding(WeddingHallRequest request);
     boolean deleteWedding(Long id);
 }

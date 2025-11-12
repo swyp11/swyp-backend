@@ -44,11 +44,16 @@ public class MakeupShopController {
         return ResponseEntity.ok(makeupShops);
     }
 
-    @Operation(summary = "특정 메이크업샵 조회", description = "ID로 특정 메이크업샵의 상세 정보를 조회합니다.")
+    @Operation(summary = "특정 메이크업샵 조회", description = "ID로 특정 메이크업샵의 상세 정보를 조회합니다. 로그인 시 찜 정보(isLiked)가 포함됩니다.")
     @GetMapping("/{id}")
     public ResponseEntity<MakeupShopResponse> getMakeupShopById(
-            @Parameter(description = "메이크업샵 ID", required = true) @PathVariable Long id) {
-        MakeupShopResponse makeupShop = makeupShopService.getMakeupShopById(id);
+            @Parameter(description = "메이크업샵 ID", required = true) @PathVariable Long id,
+            @AuthenticationPrincipal(errorOnInvalidType = false) CustomUserDetails userDetails) {
+
+        // 로그인 여부 확인
+        String userId = (userDetails != null) ? userDetails.getUsername() : null;
+
+        MakeupShopResponse makeupShop = makeupShopService.getMakeupShopById(id, userId);
         return ResponseEntity.ok(makeupShop);
     }
 
