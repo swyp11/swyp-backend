@@ -73,4 +73,11 @@ public class WeddingApiController {
         weddingHallService.deleteWedding(id);
         return ResponseEntity.ok(ApiResponse.success());
     }
+
+    @Operation(summary = "웨딩홀 키워드 검색을 합니다.")
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<WeddingHallResponse>>> searchWeddings(@RequestParam String keyword) {
+        List<WeddingHallResponse> results = weddingHallService.searchWeddings(keyword);
+        return ResponseEntity.ok(ApiResponse.success());
+    }
 }
