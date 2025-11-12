@@ -18,6 +18,7 @@ public class MakeupShopResponse {
     private String features;        // 특징 또는 기타 정보
     private LocalDateTime regDt;
     private LocalDateTime updateDt;
+    private Boolean isLiked;        // 로그인한 사용자의 찜 여부 (비로그인 시 null)
 
     public static MakeupShopResponse from(MakeupShop makeupShop) {
         MakeupShopResponse response = new MakeupShopResponse();
