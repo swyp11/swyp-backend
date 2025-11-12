@@ -23,6 +23,29 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final JwtProvider jwtProvider;
 
+    /**
+     * JWT 필터를 적용하지 않을 경로 정의
+     */
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+
+        // Swagger UI 및 API Docs 관련 경로는 필터 건너뛰기
+        return path.startsWith("/swagger-ui") ||
+               path.startsWith("/v3/api-docs") ||
+               path.startsWith("/api-docs") ||
+               path.startsWith("/swagger-resources") ||
+               path.startsWith("/webjars") ||
+               path.equals("/swagger-ui.html") ||
+               // H2 Console
+               path.startsWith("/h2-console") ||
+               // 인증 불필요 경로
+               path.equals("/") ||
+               path.equals("/login") ||
+               path.equals("/join") ||
+               path.startsWith("/oauth/");
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
