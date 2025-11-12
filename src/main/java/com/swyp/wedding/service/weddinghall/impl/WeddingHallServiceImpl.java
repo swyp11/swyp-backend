@@ -85,8 +85,22 @@ public class WeddingHallServiceImpl implements WeddingHallService{
     }
 
     @Override
-    public WeddingHallResponse getWeddingInfo(Long id) {
-        return WeddingHallResponse.from(weddingHallRepository.getReferenceById(id));
+    public WeddingHallResponse getWeddingInfo(Long id, String userId) {
+        WeddingHall weddingHall = weddingHallRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("WeddingHall not found with id: " + id));
+
+        WeddingHallResponse response = WeddingHallResponse.from(weddingHall);
+
+        // 로그인한 사용자의 경우 찜 여부 확인
+        if (userId != null) {
+            User user = userRepository.findByUserId(userId).orElse(null);
+            if (user != null) {
+                boolean isLiked = likesRepository.existsByUserAndLikesTypeAndTargetId(user, LikesType.WEDDING_HALL, id);
+                response.setIsLiked(isLiked);
+            }
+        }
+
+        return response;
     }
 
     @Override
