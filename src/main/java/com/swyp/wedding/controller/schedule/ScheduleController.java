@@ -7,6 +7,7 @@ import com.swyp.wedding.dto.schedule.ScheduleWeekResponse;
 import com.swyp.wedding.security.user.CustomUserDetails;
 import com.swyp.wedding.service.ScheduleService;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@Tag(name = "일정", description = "결혼 준비 일정 관리 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/schedule")

@@ -21,7 +21,7 @@ import com.swyp.wedding.service.hall.impl.HallServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "웨딩홀 - 홀 API")
+@Tag(name = "홀", description = "웨딩홀 - 홀 관리 API")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/hall")
