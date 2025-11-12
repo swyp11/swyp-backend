@@ -3,20 +3,25 @@ package com.swyp.wedding.controller.user;
 import com.swyp.wedding.dto.auth.OAuthExtraInfoRequest;
 import com.swyp.wedding.dto.user.UserRequest;
 import com.swyp.wedding.dto.user.UserResponse;
+import com.swyp.wedding.dto.user.UserUpdateRequest;
 import com.swyp.wedding.security.user.CustomUserDetails;
 import com.swyp.wedding.service.JoinService;
+import com.swyp.wedding.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+@Tag(name = "User", description = "사용자 관리 API")
 @RestController
 @RequiredArgsConstructor
 public class UserController {
 
     private final JoinService joinService;
+    private final UserService userService;
 
     @PostMapping("/join")
     public String JoinProcess(@RequestBody UserRequest userRequest){
@@ -30,6 +35,21 @@ public class UserController {
                                                          @RequestBody OAuthExtraInfoRequest request){
          UserResponse userResponse = joinService.OAuthJoinProcess(userDetails, request);
          return ResponseEntity.ok(userResponse);
+    }
+
+    @Operation(summary = "사용자 정보 조회", description = "현재 로그인한 사용자의 정보를 조회합니다.")
+    @GetMapping("/user/info")
+    public ResponseEntity<UserResponse> getUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserResponse userResponse = userService.getUserInfo(userDetails);
+        return ResponseEntity.ok(userResponse);
+    }
+
+    @Operation(summary = "사용자 정보 수정", description = "현재 로그인한 사용자의 정보를 수정합니다.")
+    @PutMapping("/user/info")
+    public ResponseEntity<UserResponse> updateUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                        @RequestBody UserUpdateRequest request) {
+        UserResponse userResponse = userService.updateUserInfo(userDetails, request);
+        return ResponseEntity.ok(userResponse);
     }
 
 }
