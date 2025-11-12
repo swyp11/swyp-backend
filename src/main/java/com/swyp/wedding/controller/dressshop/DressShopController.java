@@ -1,10 +1,12 @@
 package com.swyp.wedding.controller.dressshop;
 
+import com.swyp.wedding.security.user.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.swyp.wedding.dto.dressshop.DressShopRequest;
@@ -24,19 +26,23 @@ public class DressShopController {
     private final DressShopService dressShopService;
     private final DressService dressService;
 
-    @Operation(summary = "드레스샵 목록 조회", 
-               description = "드레스샵 목록을 조회합니다. 파라미터로 검색 및 정렬 옵션을 지정할 수 있습니다. 여러 조건을 동시에 사용 가능합니다.")
+    @Operation(summary = "드레스샵 목록 조회",
+               description = "드레스샵 목록을 조회합니다. 파라미터로 검색 및 정렬 옵션을 지정할 수 있습니다. 여러 조건을 동시에 사용 가능합니다. 로그인 시 찜 정보(isLiked)가 포함됩니다.")
     @GetMapping
     public ResponseEntity<List<DressShopResponse>> getAllDressShops(
             @Parameter(description = "샵 이름 (부분 일치 검색)") @RequestParam(required = false) String shopName,
             @Parameter(description = "주소/지역 (부분 일치 검색)") @RequestParam(required = false) String address,
             @Parameter(description = "전문분야 (부분 일치 검색)") @RequestParam(required = false) String specialty,
-            @Parameter(description = "정렬 기준: RECENT(최신순), FAVORITE(인기순)", example = "RECENT") 
-            @RequestParam(required = false) SortType sort) {
-        
+            @Parameter(description = "정렬 기준: RECENT(최신순), FAVORITE(인기순)", example = "RECENT")
+            @RequestParam(required = false) SortType sort,
+            @AuthenticationPrincipal(errorOnInvalidType = false) CustomUserDetails userDetails) {
+
+        // 로그인 여부 확인
+        String userId = (userDetails != null) ? userDetails.getUsername() : null;
+
         // 복합 조건으로 검색 (null이 아닌 모든 파라미터 적용)
-        List<DressShopResponse> dressShops = dressShopService.searchDressShops(shopName, address, specialty, sort);
-        
+        List<DressShopResponse> dressShops = dressShopService.searchDressShops(shopName, address, specialty, sort, userId);
+
         return ResponseEntity.ok(dressShops);
     }
 
