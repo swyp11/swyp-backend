@@ -1,5 +1,7 @@
 package com.swyp.wedding.service.dress;
 
+import com.swyp.wedding.global.exception.BusinessException;
+import com.swyp.wedding.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,18 +29,18 @@ public class DressService {
     // 특정 드레스 조회
     public DressResponse getDressById(Long id) {
         Dress dress = dressRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("드레스를 찾을 수 없습니다. ID: " + id));
+                .orElseThrow(() -> new BusinessException(ErrorCode.DRESS_NOT_FOUND));
         return DressResponse.from(dress);
     }
 
     // 새 드레스 생성
     @Transactional
     public DressResponse createDress(DressRequest request) {
-        // shopName 기본 검증만
+        // shopName 기본 검증
         if (request.getShopName() == null || request.getShopName().trim().isEmpty()) {
-            throw new RuntimeException("Shop Name은 필수입니다.");
+            throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "Shop Name은 필수입니다.");
         }
-        
+
         Dress dress = request.toEntity();
         Dress savedDress = dressRepository.save(dress);
         return DressResponse.from(savedDress);
@@ -48,7 +50,7 @@ public class DressService {
     @Transactional
     public DressResponse updateDress(Long id, DressRequest request) {
         Dress existingDress = dressRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("드레스를 찾을 수 없습니다. ID: " + id));
+                .orElseThrow(() -> new BusinessException(ErrorCode.DRESS_NOT_FOUND));
 
         // 기존 드레스 정보 업데이트
         Dress updatedDress = Dress.builder()
@@ -77,7 +79,7 @@ public class DressService {
     @Transactional
     public void deleteDress(Long id) {
         if (!dressRepository.existsById(id)) {
-            throw new RuntimeException("드레스를 찾을 수 없습니다. ID: " + id);
+            throw new BusinessException(ErrorCode.DRESS_NOT_FOUND);
         }
         dressRepository.deleteById(id);
     }
