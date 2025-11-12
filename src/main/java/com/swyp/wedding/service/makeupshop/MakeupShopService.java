@@ -46,7 +46,7 @@ public class MakeupShopService {
         if (userId != null) {
             User user = userRepository.findByUserId(userId).orElse(null);
             if (user != null) {
-                boolean isLiked = likesRepository.existsByUserAndLikesTypeAndTargetId(user, LikesType.SHOP, id);
+                boolean isLiked = likesRepository.existsByUserAndLikesTypeAndTargetId(user, LikesType.MAKEUP_SHOP, id);
                 response.setIsLiked(isLiked);
             }
         }
@@ -101,8 +101,8 @@ public class MakeupShopService {
         if (sort == SortType.RECENT) {
             makeupShops = makeupShopRepository.findAllByOrderByRegDtDesc();
         } else if (sort == SortType.FAVORITE) {
-            // tb_likes 테이블에서 likes_type = 'SHOP'인 항목들을 집계하여 좋아요가 많은 순서대로 ID 목록 가져오기
-            List<Object[]> likesCounts = likesRepository.findTargetIdsByLikesTypeOrderByCountDesc(LikesType.SHOP);
+            // tb_likes 테이블에서 likes_type = 'MAKEUP_SHOP'인 항목들을 집계하여 좋아요가 많은 순서대로 ID 목록 가져오기
+            List<Object[]> likesCounts = likesRepository.findTargetIdsByLikesTypeOrderByCountDesc(LikesType.MAKEUP_SHOP);
 
             // target_id(MakeupShop의 id) 목록 추출
             List<Long> sortedIds = likesCounts.stream()
@@ -147,7 +147,7 @@ public class MakeupShopService {
                         .map(MakeupShop::getId)
                         .collect(Collectors.toList());
 
-                likedShopIds = likesRepository.findByUserAndLikesTypeAndTargetIdIn(user, LikesType.SHOP, shopIds)
+                likedShopIds = likesRepository.findByUserAndLikesTypeAndTargetIdIn(user, LikesType.MAKEUP_SHOP, shopIds)
                         .stream()
                         .map(Likes::getTargetId)
                         .collect(Collectors.toSet());

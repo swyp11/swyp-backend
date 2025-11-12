@@ -52,7 +52,8 @@ public class LikesServiceImpl implements LikesService {
                 case "hall" -> likesType = LikesType.HALL;
                 case "wedding_hall" -> likesType = LikesType.WEDDING_HALL;
                 case "dress" -> likesType = LikesType.DRESS;
-                case "shop" -> likesType = LikesType.SHOP;
+                case "dress_shop" -> likesType = LikesType.DRESS_SHOP;
+                case "makeup_shop" -> likesType = LikesType.MAKEUP_SHOP;
                 default -> throw new IllegalArgumentException("지원하지 않는 카테고리입니다: " + category);
             }
 
@@ -106,7 +107,8 @@ public class LikesServiceImpl implements LikesService {
             case "hall" -> LikesType.HALL;
             case "wedding_hall" -> LikesType.WEDDING_HALL;
             case "dress" -> LikesType.DRESS;
-            case "shop" -> LikesType.SHOP;
+            case "dress_shop" -> LikesType.DRESS_SHOP;
+            case "makeup_shop" -> LikesType.MAKEUP_SHOP;
             default -> throw new IllegalArgumentException("지원하지 않는 카테고리입니다: " + category);
         };
 
@@ -123,16 +125,16 @@ public class LikesServiceImpl implements LikesService {
 
         // 카테고리별로 실제 아이템 정보 조회
         Object itemDetails = switch (likes.getLikesType()) {
-            case SHOP -> {
-                // SHOP은 DressShop 또는 MakeupShop일 수 있음
-                // 먼저 DressShop 조회 시도
+            case DRESS_SHOP -> {
                 DressShop dressShop = dressShopRepository.findById(likes.getTargetId()).orElse(null);
                 if (dressShop != null) {
                     DressShopResponse dressShopResponse = DressShopResponse.from(dressShop);
                     dressShopResponse.setIsLiked(true);
                     yield dressShopResponse;
                 }
-                // DressShop이 없으면 MakeupShop 조회
+                yield null;
+            }
+            case MAKEUP_SHOP -> {
                 MakeupShop makeupShop = makeupShopRepository.findById(likes.getTargetId()).orElse(null);
                 if (makeupShop != null) {
                     MakeupShopResponse makeupShopResponse = MakeupShopResponse.from(makeupShop);
