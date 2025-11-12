@@ -40,9 +40,11 @@ public class GoogleOAuthClient implements OAuthClient {
         params.add("redirect_uri", redirectUri);
         params.add("grant_type", "authorization_code");
 
-        // accesstoken 만 꺼냄
+        // Authorization Code → Access Token 교환
         Map<String, Object> tokenResponse =
                 restTemplate.postForObject(tokenUri, params, Map.class);
+
+        // accessToken만 추출
         String accessToken = (String) tokenResponse.get("access_token");
 
         // 사용자 정보 요청
@@ -52,6 +54,10 @@ public class GoogleOAuthClient implements OAuthClient {
 
         Map<String, Object> userInfo =
                 restTemplate.exchange(userinfoUri, HttpMethod.GET, entity, Map.class).getBody();
+
+        // 콘솔 확인 용
+//        System.out.println("✅ 구글 UserInfo 응답 데이터:");
+//        userInfo.forEach((k, v) -> System.out.println(k + " = " + v));
 
         // 통일된 DTO로 반환
         return new GoogleUserInfo(userInfo);

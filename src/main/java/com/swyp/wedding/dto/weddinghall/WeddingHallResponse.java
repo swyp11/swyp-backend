@@ -14,6 +14,7 @@ public class WeddingHallResponse {
     private String address;
     private String phone;
     private String email;
+    private String imageUrl;
 
     public static WeddingHallResponse from(WeddingHall weddingHall) {
         WeddingHallResponse response = new WeddingHallResponse();
@@ -25,6 +26,7 @@ public class WeddingHallResponse {
         response.setAddress(weddingHall.getAddress());
         response.setPhone(weddingHall.getPhone());
         response.setEmail(weddingHall.getEmail());
+        response.setImageUrl(weddingHall.getImageUrl());
 
         return response;
     }
