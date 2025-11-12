@@ -141,4 +141,12 @@ public class WeddingHallServiceImpl implements WeddingHallService{
             throw e;
         }
     }
+
+    @Override
+    public List<WeddingHallResponse> searchWeddings(String keyword) {
+        List<WeddingHall> results = weddingHallRepository.findByKeyword(keyword);
+        return results.stream()
+                .map(WeddingHallResponse::from)
+                .collect(Collectors.toList());
+    }
 }

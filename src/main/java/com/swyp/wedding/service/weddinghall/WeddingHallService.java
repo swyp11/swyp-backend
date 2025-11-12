@@ -12,4 +12,5 @@ public interface WeddingHallService {
     WeddingHallResponse getWeddingInfo(Long id, String userId);
     boolean updateWedding(WeddingHallRequest request);
     boolean deleteWedding(Long id);
+    List<WeddingHallResponse> searchWeddings(String keyword);
 }
