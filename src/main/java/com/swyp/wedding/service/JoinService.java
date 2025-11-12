@@ -21,19 +21,25 @@ public class JoinService {
 
     public String JoinProcess(UserRequest userRequest){
 
-        //중복 가입 확인
-        if(userRepository.existsByPhoneNumber(userRequest.getPhoneNumber())){
-            return "이미 가입한 전화번호입니다.";
+        //중복 가입 확인 (전화번호가 제공된 경우에만)
+        if(userRequest.getPhoneNumber() != null &&
+           userRepository.existsByPhoneNumber(userRequest.getPhoneNumber())){
+            throw new IllegalArgumentException("이미 가입한 전화번호입니다.");
         }
 
-       //회원 userId 중복확인
+        //회원 userId 중복확인
         if(userRepository.existsByUserId(userRequest.getUserId())){
-            return "해당 아이디가 이미 존재합니다.";
+            throw new IllegalArgumentException("해당 아이디가 이미 존재합니다.");
+        }
+
+        //회원 email 중복확인
+        if(userRepository.existsByUserId(userRequest.getEmail())){
+            throw new IllegalArgumentException("해당 이메일이 이미 존재합니다.");
         }
 
         //비밀번호 검증
         if(!isValidPassword(userRequest.getPassword())){
-            return "비밀번호는 문자 + 숫자 8~20자를 충족해야합니다.";
+            throw new IllegalArgumentException("비밀번호는 문자 + 숫자 8~12자를 충족해야합니다.");
         }
 
 
