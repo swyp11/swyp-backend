@@ -64,7 +64,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         // 인증이 필요없는 경로
-                        .requestMatchers("/", "/login", "/join" ,"/home", "/logout","/oauth/**" ,"/calendar/**" ).permitAll()
+                        .requestMatchers("/", "/login", "/join" ,"/home", "/logout","/oauth/**").permitAll()
                         // Swagger UI 관련 엔드포인트 (정적 리소스 포함)
                         .requestMatchers(
                                 "/swagger-ui/**",
@@ -73,6 +73,15 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/webjars/**",
                                 "/swagger-ui.html"
+                        ).permitAll()
+                        // 조회 API (GET) - 인증 불필요
+                        .requestMatchers(
+                                org.springframework.http.HttpMethod.GET,
+                                "/api/dress/**",
+                                "/api/dress-shop/**",
+                                "/api/makeup-shop/**",
+                                "/api/wedding/**",
+                                "/api/hall/**"
                         ).permitAll()
                         .requestMatchers(("/join/oAuth/extra-info")).authenticated() // 소셜 로그인 후 추가 정보 삽입 과정
                         // TODO 관리자의 경우
