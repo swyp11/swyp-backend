@@ -26,4 +26,6 @@ public class WeddingHall {
     private String phone;
 
     private String email;
+
+    private String imageUrl;
 }
