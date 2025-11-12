@@ -26,6 +26,7 @@ public class WeddingHallRepositoryTest {
         String testAddress = "서울시";
         String testPhone = "010-1111-1111";
         String testEmail = "test@test";
+        String testImageUrl = "https://example.com/image.jpg";
 
         WeddingHall weddingHall = WeddingHall.builder()
                 .name(testName)
@@ -34,6 +35,7 @@ public class WeddingHallRepositoryTest {
                 .address(testAddress)
                 .email(testEmail)
                 .parking(testParking)
+                .imageUrl(testImageUrl)
                 .build();
         // when
         weddingHallRepository.save(weddingHall);
@@ -48,6 +50,7 @@ public class WeddingHallRepositoryTest {
         assertThat(result.getAddress()).isEqualTo(weddingHall.getAddress());
         assertThat(result.getEmail()).isEqualTo(weddingHall.getEmail());
         assertThat(result.getParking()).isEqualTo(weddingHall.getParking());
+        assertThat(result.getImageUrl()).isEqualTo(weddingHall.getImageUrl());
     }
 
     @DisplayName("데이터 삭제 테스트를 진행합니다.")
@@ -60,6 +63,7 @@ public class WeddingHallRepositoryTest {
         String testAddress = "서울시";
         String testPhone = "010-1111-1111";
         String testEmail = "test@test";
+        String testImageUrl = "https://example.com/image.jpg";
 
         WeddingHall weddingHall = WeddingHall.builder()
                 .name(testName)
@@ -68,6 +72,7 @@ public class WeddingHallRepositoryTest {
                 .address(testAddress)
                 .email(testEmail)
                 .parking(testParking)
+                .imageUrl(testImageUrl)
                 .build();
 
         // when

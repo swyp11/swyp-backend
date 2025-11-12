@@ -1,12 +1,16 @@
 package com.swyp.wedding.service;
 
+import com.swyp.wedding.dto.auth.OAuthExtraInfoRequest;
 import com.swyp.wedding.dto.user.UserRequest;
+import com.swyp.wedding.dto.user.UserResponse;
 import com.swyp.wedding.entity.user.User;
-import com.swyp.wedding.repository.user.UserRepository;
-import lombok.RequiredArgsConstructor;
 import com.swyp.wedding.entity.user.UserEnum;
+import com.swyp.wedding.repository.user.UserRepository;
+import com.swyp.wedding.security.user.CustomUserDetails;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,11 +44,13 @@ public class JoinService {
         User user = User.builder()
                 .userId(userRequest.getUserId())
                 .password(encodedPassword)
-                .name(userRequest.getName())
+                .nickname(userRequest.getNickname())
                 .email(userRequest.getEmail())
                 .phoneNumber(userRequest.getPhoneNumber())
                 .address(userRequest.getAddress())
                 .birth(userRequest.getBirth())
+                .weddingDate(userRequest.getWeddingDate())
+                .weddingRole(userRequest.getWeddingRole())
                 .auth(UserEnum.USER)
                 .build();
 
@@ -62,5 +68,22 @@ public class JoinService {
         String regex = "^(?=.*[a-zA-Z])(?=.*\\d)[A-Za-z\\d]{8,12}$";
         return password.matches(regex);
 
+    }
+
+    // OAuth 로그인/회원가입 시 추가정보 입력
+    @Transactional
+    public UserResponse OAuthJoinProcess(CustomUserDetails userDetails, OAuthExtraInfoRequest request) {
+
+        User user = userRepository.findByUserId(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 사용자입니다."));
+
+        user.updateExtraInfo(request);
+        return UserResponse.builder()
+                .userId(user.getUserId())
+                .auth(user.getAuth())
+                .nickname(user.getNickname())
+                .weddingDate(user.getWeddingDate())
+                .weddingRole(user.getWeddingRole())
+                .build();
     }
 }
