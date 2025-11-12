@@ -1,4 +1,4 @@
-package com.swyp.wedding.config;
+package com.swyp.wedding.global.config;
 
 import com.swyp.wedding.security.jwt.JwtFilter;
 import com.swyp.wedding.security.jwt.JwtProvider;
