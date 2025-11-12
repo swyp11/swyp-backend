@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.swyp.wedding.dto.weddinghall.WeddingHallRequest;
 import com.swyp.wedding.dto.weddinghall.WeddingHallResponse;
+import com.swyp.wedding.entity.common.SortType;
 import com.swyp.wedding.entity.weddinghall.WeddingHall;
 import com.swyp.wedding.repository.weddinghall.WeddingHallRepository;
 import com.swyp.wedding.service.weddinghall.WeddingHallService;
@@ -21,8 +22,16 @@ public class WeddingHallServiceImpl implements WeddingHallService{
     final private WeddingHallRepository weddingHallRepository;
 
     @Override
-    public List<WeddingHallResponse> getWeddingInfos() {
-        List<WeddingHall> infos = weddingHallRepository.findAll();
+    public List<WeddingHallResponse> getWeddingInfos(SortType sort) {
+        List<WeddingHall> infos;
+
+        if (sort == SortType.FAVORITE) {
+            // 인기순 정렬 (찜 개수 기준)
+            infos = weddingHallRepository.findAllOrderByLikesCountDesc();
+        } else {
+            // 최신순 정렬 (기본값)
+            infos = weddingHallRepository.findAllByOrderByRegDtDesc();
+        }
 
         return infos.stream()
                 .map(WeddingHallResponse::from)
