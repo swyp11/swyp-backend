@@ -59,15 +59,16 @@ public class WeddingHallServiceImpl implements WeddingHallService{
 
         return weddingHallRepository.findById(id)
                 .map(existing -> {
-                    WeddingHall updated = new WeddingHall(
-                            id,
-                            request.getName(),
-                            request.getVenueType(),
-                            request.getParking(),
-                            request.getAddress(),
-                            request.getPhone(),
-                            request.getEmail()
-                    );
+                    WeddingHall updated = WeddingHall.builder()
+                            .id(id)
+                            .name(request.getName())
+                            .venueType(request.getVenueType())
+                            .parking(request.getParking())
+                            .address(request.getAddress())
+                            .phone(request.getPhone())
+                            .email(request.getEmail())
+                            .imageUrl(request.getImageUrl())
+                            .build();
                     weddingHallRepository.save(updated);
                     return true;
                 })
