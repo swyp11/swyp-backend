@@ -46,7 +46,7 @@ public class DressShopService {
         if (userId != null) {
             User user = userRepository.findByUserId(userId).orElse(null);
             if (user != null) {
-                boolean isLiked = likesRepository.existsByUserAndLikesTypeAndTargetId(user, LikesType.SHOP, id);
+                boolean isLiked = likesRepository.existsByUserAndLikesTypeAndTargetId(user, LikesType.DRESS_SHOP, id);
                 response.setIsLiked(isLiked);
             }
         }
@@ -102,7 +102,7 @@ public class DressShopService {
             dressShops = dressShopRepository.findAllByOrderByRegDtDesc();
         } else if (sort == SortType.FAVORITE) {
             // tb_likes 테이블에서 likes_type = 'SHOP'인 항목들을 집계하여 좋아요가 많은 순서대로 ID 목록 가져오기
-            List<Object[]> likesCounts = likesRepository.findTargetIdsByLikesTypeOrderByCountDesc(LikesType.SHOP);
+            List<Object[]> likesCounts = likesRepository.findTargetIdsByLikesTypeOrderByCountDesc(LikesType.DRESS_SHOP);
 
             // target_id(DressShop의 id) 목록 추출
             List<Long> sortedIds = likesCounts.stream()
@@ -147,7 +147,7 @@ public class DressShopService {
                         .map(DressShop::getId)
                         .collect(Collectors.toList());
 
-                likedShopIds = likesRepository.findByUserAndLikesTypeAndTargetIdIn(user, LikesType.SHOP, shopIds)
+                likedShopIds = likesRepository.findByUserAndLikesTypeAndTargetIdIn(user, LikesType.DRESS_SHOP, shopIds)
                         .stream()
                         .map(Likes::getTargetId)
                         .collect(Collectors.toSet());
