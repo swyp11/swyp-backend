@@ -2,6 +2,7 @@ package com.swyp.wedding.controller.dressshop;
 
 import com.swyp.wedding.global.response.ApiResponse;
 import com.swyp.wedding.security.user.CustomUserDetails;
+import com.swyp.wedding.security.user.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,8 +28,8 @@ public class DressShopController {
     private final DressShopService dressShopService;
     private final DressService dressService;
 
-    @Operation(summary = "드레스샵 목록 조회",
-               description = "드레스샵 목록을 조회합니다. 파라미터로 검색 및 정렬 옵션을 지정할 수 있습니다. 여러 조건을 동시에 사용 가능합니다. 로그인 시 찜 정보(isLiked)가 포함됩니다.")
+    @Operation(summary = "드레스샵 목록 조회", 
+               description = "드레스샵 목록을 조회합니다. 파라미터로 검색 및 정렬 옵션을 지정할 수 있습니다. 여러 조건을 동시에 사용 가능합니다.")
     @GetMapping
     public ResponseEntity<ApiResponse<List<DressShopResponse>>> getAllDressShops(
             @Parameter(description = "샵 이름 (부분 일치 검색)") @RequestParam(required = false) String shopName,
