@@ -25,5 +25,11 @@ public interface LikesRepository extends JpaRepository<Likes, Long> {
 
     // 특정 사용자의 여러 게시물에 대한 좋아요 목록 조회
     List<Likes> findByUserAndLikesTypeAndTargetIdIn(User user, LikesType likesType, List<Long> targetIds);
+
+    // 특정 사용자의 모든 찜 목록 조회
+    List<Likes> findByUserOrderByUpdateDtDesc(User user);
+
+    // 특정 사용자의 카테고리별 찜 목록 조회
+    List<Likes> findByUserAndLikesTypeOrderByUpdateDtDesc(User user, LikesType likesType);
 }
 
