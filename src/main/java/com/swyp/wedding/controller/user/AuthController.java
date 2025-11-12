@@ -7,6 +7,7 @@ import com.swyp.wedding.dto.auth.TokenResponse;
 import com.swyp.wedding.global.response.ApiResponse;
 import com.swyp.wedding.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "인증", description = "로그인 및 OAuth 인증 API")
 @RestController
 @RequiredArgsConstructor
 public class AuthController {

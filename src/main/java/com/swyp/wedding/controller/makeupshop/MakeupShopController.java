@@ -14,7 +14,7 @@ import com.swyp.wedding.service.makeupshop.MakeupShopService;
 
 import java.util.List;
 
-@Tag(name = "MakeupShop", description = "웨딩 메이크업 샵 관리 API")
+@Tag(name = "메이크업샵", description = "웨딩 메이크업 샵 관리 API")
 @RestController
 @RequestMapping("/api/makeup-shop")
 @RequiredArgsConstructor
