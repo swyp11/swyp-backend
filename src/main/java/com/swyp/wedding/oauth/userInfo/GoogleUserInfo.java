@@ -14,9 +14,16 @@ public class GoogleUserInfo implements OAuthUserInfo {
         return "google";
     }
 
+    // 구글은 응답 구조에 따라 "sub" 또는 "id" 둘 중 하나로 옴
     @Override
     public String getProviderId() {
-        return attribute.get("sub").toString();
+        if (attribute.containsKey("sub")) {
+            return attribute.get("sub").toString();
+        } else if (attribute.containsKey("id")) {
+            return attribute.get("id").toString();
+        } else {
+            return "unknown";
+        }
     }
 
     @Override
