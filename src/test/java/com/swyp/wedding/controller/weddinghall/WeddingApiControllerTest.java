@@ -3,6 +3,7 @@ package com.swyp.wedding.controller.weddinghall;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swyp.wedding.dto.weddinghall.WeddingHallRequest;
 import com.swyp.wedding.dto.weddinghall.WeddingHallResponse;
+import com.swyp.wedding.entity.common.SortType;
 import com.swyp.wedding.entity.weddinghall.WeddingHall;
 import com.swyp.wedding.entity.weddinghall.WeddingHallEnum;
 import com.swyp.wedding.service.weddinghall.impl.WeddingHallServiceImpl;
@@ -93,11 +94,11 @@ class WeddingApiControllerTest {
     }
 
     @Test
-    @DisplayName("GET /api/wedding - 웨딩홀 리스트 조회 성공")
+    @DisplayName("GET /api/wedding - 웨딩홀 리스트 조회 성공 (기본값)")
     void getWeddings_Success() throws Exception {
         // given
         List<WeddingHallResponse> responses = Arrays.asList(testResponse1, testResponse2);
-        given(weddingHallService.getWeddingInfos()).willReturn(responses);
+        given(weddingHallService.getWeddingInfos(null)).willReturn(responses);
 
         // when & then
         mockMvc.perform(get("/api/wedding"))
@@ -122,7 +123,7 @@ class WeddingApiControllerTest {
     @DisplayName("GET /api/wedding - 빈 리스트 조회")
     void getWeddings_EmptyList() throws Exception {
         // given
-        given(weddingHallService.getWeddingInfos()).willReturn(Arrays.asList());
+        given(weddingHallService.getWeddingInfos(null)).willReturn(Arrays.asList());
 
         // when & then
         mockMvc.perform(get("/api/wedding"))
@@ -131,6 +132,48 @@ class WeddingApiControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    @DisplayName("GET /api/wedding?sort=RECENT - 웨딩홀 리스트 최신순 조회")
+    void getWeddings_RecentSort() throws Exception {
+        // given
+        List<WeddingHallResponse> responses = Arrays.asList(testResponse1, testResponse2);
+        given(weddingHallService.getWeddingInfos(SortType.RECENT)).willReturn(responses);
+
+        // when & then
+        mockMvc.perform(get("/api/wedding")
+                        .param("sort", "RECENT"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value("그랜드 웨딩홀"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].name").value("로얄 호텔"));
+    }
+
+    @Test
+    @DisplayName("GET /api/wedding?sort=FAVORITE - 웨딩홀 리스트 인기순 조회")
+    void getWeddings_FavoriteSort() throws Exception {
+        // given
+        List<WeddingHallResponse> responses = Arrays.asList(testResponse2, testResponse1);
+        given(weddingHallService.getWeddingInfos(SortType.FAVORITE)).willReturn(responses);
+
+        // when & then
+        mockMvc.perform(get("/api/wedding")
+                        .param("sort", "FAVORITE"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].id").value(2))
+                .andExpect(jsonPath("$[0].name").value("로얄 호텔"))
+                .andExpect(jsonPath("$[1].id").value(1))
+                .andExpect(jsonPath("$[1].name").value("그랜드 웨딩홀"));
     }
 
     @Test
