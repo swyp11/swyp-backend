@@ -1,8 +1,8 @@
 package com.swyp.wedding.controller.weddinghall;
 
 import java.util.List;
-import java.util.Map;
 
+import com.swyp.wedding.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -27,35 +27,37 @@ public class WeddingApiController {
     @Operation(summary = "웨딩홀 리스트를 조회합니다.",
                description = "정렬 기준: RECENT(최신순), FAVORITE(인기순). 기본값은 최신순입니다.")
     @GetMapping
-    public ResponseEntity<List<WeddingHallResponse>> getWeddings(
+    public ResponseEntity<ApiResponse<List<WeddingHallResponse>>> getWeddings(
             @Parameter(description = "정렬 기준: RECENT(최신순), FAVORITE(인기순)", example = "RECENT")
             @RequestParam(required = false) SortType sort) {
-        return ResponseEntity.ok(weddingHallService.getWeddingInfos(sort));
+        return ResponseEntity.ok(ApiResponse.success(weddingHallService.getWeddingInfos(sort)));
     }
-
 
     @Operation(summary = "웨딩홀에 대한 상세정보를 조회합니다.")
     @GetMapping("/{id}")
-    public ResponseEntity<WeddingHallResponse> getWeddingInfo(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(weddingHallService.getWeddingInfo(id));
+    public ResponseEntity<ApiResponse<WeddingHallResponse>> getWeddingInfo(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(ApiResponse.success(weddingHallService.getWeddingInfo(id)));
     }
 
     @Operation(summary = "웨딩홀에 대한 정보를 저장합니다.")
     @PostMapping
-    public ResponseEntity<Map<String, Object>> saveWedding(@RequestBody WeddingHallRequest request) {
-        return ResponseEntity.ok(Map.of("result", weddingHallService.saveWedding(request)));
+    public ResponseEntity<ApiResponse<Void>> saveWedding(@RequestBody WeddingHallRequest request) {
+        weddingHallService.saveWedding(request);
+        return ResponseEntity.ok(ApiResponse.success());
     }
 
     @Operation(summary = "웨딩홀에 대한 정보를 수정합니다.")
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> updateWedding(@PathVariable Long id, @RequestBody WeddingHallRequest request) {
+    public ResponseEntity<ApiResponse<Void>> updateWedding(@PathVariable Long id, @RequestBody WeddingHallRequest request) {
         request.setId(id);
-        return ResponseEntity.ok(Map.of("result", weddingHallService.updateWedding(request)));
+        weddingHallService.updateWedding(request);
+        return ResponseEntity.ok(ApiResponse.success());
     }
 
     @Operation(summary = "웨딩홀에 대한 정보를 삭제합니다.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> deleteWedding(@PathVariable Long id) {
-        return ResponseEntity.ok(Map.of("result", weddingHallService.deleteWedding(id)));
+    public ResponseEntity<ApiResponse<Void>> deleteWedding(@PathVariable Long id) {
+        weddingHallService.deleteWedding(id);
+        return ResponseEntity.ok(ApiResponse.success());
     }
 }
