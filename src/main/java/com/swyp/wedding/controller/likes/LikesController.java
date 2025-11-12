@@ -1,14 +1,18 @@
 package com.swyp.wedding.controller.likes;
 
+import com.swyp.wedding.dto.likes.LikesResponse;
 import com.swyp.wedding.global.response.ApiResponse;
 import com.swyp.wedding.security.user.CustomUserDetails;
 import com.swyp.wedding.service.likes.impl.LikesServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "찜", description = "찜 기능 관리 API")
 @RequiredArgsConstructor
@@ -34,5 +38,27 @@ public class LikesController {
         // 추후 계정 없는 것에 대한 예외처리 기능 만들 예정 (고도화 때)
         likesService.deleteLikes(id);
         return ResponseEntity.ok(ApiResponse.success());
+    }
+
+    @Operation(summary = "사용자의 모든 찜 목록 조회",
+               description = "로그인한 사용자의 모든 찜 목록을 최신순으로 조회합니다. 각 아이템의 상세 정보가 포함됩니다.")
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<LikesResponse>>> getUserLikes(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String userId = userDetails.getUsername();
+        List<LikesResponse> likes = likesService.getUserLikes(userId);
+        return ResponseEntity.ok(ApiResponse.success(likes));
+    }
+
+    @Operation(summary = "사용자의 카테고리별 찜 목록 조회",
+               description = "로그인한 사용자의 특정 카테고리 찜 목록을 최신순으로 조회합니다. category: hall, wedding_hall, dress, shop")
+    @GetMapping("/category/{category}")
+    public ResponseEntity<ApiResponse<List<LikesResponse>>> getUserLikesByCategory(
+            @Parameter(description = "카테고리: hall, wedding_hall, dress, shop", required = true)
+            @PathVariable String category,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String userId = userDetails.getUsername();
+        List<LikesResponse> likes = likesService.getUserLikesByCategory(userId, category);
+        return ResponseEntity.ok(ApiResponse.success(likes));
     }
 }
