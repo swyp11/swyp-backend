@@ -11,8 +11,14 @@ import lombok.Getter;
 @Schema(description = "일단 현재는 accessToken 만 뽑아서 사용중이라 다른 게 필요는 없음")
 public class TokenResponse {
     private String accessToken;
-//    private long expiresIn;
-//    private String tokenType;  // Bearer
-//    private String email;
-//    private String name;
+    private long expiresIn;
+    private String tokenType;  // Bearer
+
+    public static TokenResponse of(String accessToken) {
+        return TokenResponse.builder()
+                .accessToken(accessToken)
+                .tokenType("Bearer")
+                .expiresIn(3600L)
+                .build();
+    }
 }
