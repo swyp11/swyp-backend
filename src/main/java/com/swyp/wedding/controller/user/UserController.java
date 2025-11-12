@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "User", description = "사용자 관리 API")
+@Tag(name = "사용자", description = "사용자 관리 API")
 @RestController
 @RequiredArgsConstructor
 public class UserController {

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
-@Tag(name = "찜 기능 API")
+@Tag(name = "찜", description = "찜 기능 관리 API")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/likes")
