@@ -51,4 +51,29 @@ public class User {
         this.weddingDate = getWeddingDate();
         this.weddingRole = getWeddingRole();
     }
+
+    public void updateUserInfo(String nickname, LocalDate birth, LocalDate weddingDate,
+                               String email, WeddingRole weddingRole, String phoneNumber, String address) {
+        if (nickname != null) {
+            this.nickname = nickname;
+        }
+        if (birth != null) {
+            this.birth = birth;
+        }
+        if (weddingDate != null) {
+            this.weddingDate = weddingDate;
+        }
+        if (email != null) {
+            this.email = email;
+        }
+        if (weddingRole != null) {
+            this.weddingRole = weddingRole;
+        }
+        if (phoneNumber != null) {
+            this.phoneNumber = phoneNumber;
+        }
+        if (address != null) {
+            this.address = address;
+        }
+    }
 }
