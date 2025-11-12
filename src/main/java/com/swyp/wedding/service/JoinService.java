@@ -23,7 +23,7 @@ public class JoinService {
 
         //중복 가입 확인
         if(userRepository.existsByPhoneNumber(userRequest.getPhoneNumber())){
-            return "이미 가입한 회원입니다.";
+            return "이미 가입한 전화번호입니다.";
         }
 
        //회원 userId 중복확인
