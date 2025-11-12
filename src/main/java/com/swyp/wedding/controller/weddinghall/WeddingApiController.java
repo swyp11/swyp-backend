@@ -3,9 +3,11 @@ package com.swyp.wedding.controller.weddinghall;
 import java.util.List;
 
 import com.swyp.wedding.global.response.ApiResponse;
+import com.swyp.wedding.security.user.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.swyp.wedding.dto.weddinghall.WeddingHallRequest;
@@ -25,12 +27,17 @@ public class WeddingApiController {
     private final WeddingHallServiceImpl weddingHallService;
 
     @Operation(summary = "웨딩홀 리스트를 조회합니다.",
-               description = "정렬 기준: RECENT(최신순), FAVORITE(인기순). 기본값은 최신순입니다.")
+               description = "정렬 기준: RECENT(최신순), FAVORITE(인기순). 기본값은 최신순입니다. 로그인 시 찜 정보(isLiked)가 포함됩니다.")
     @GetMapping
     public ResponseEntity<ApiResponse<List<WeddingHallResponse>>> getWeddings(
             @Parameter(description = "정렬 기준: RECENT(최신순), FAVORITE(인기순)", example = "RECENT")
-            @RequestParam(required = false) SortType sort) {
-        return ResponseEntity.ok(ApiResponse.success(weddingHallService.getWeddingInfos(sort)));
+            @RequestParam(required = false) SortType sort,
+            @AuthenticationPrincipal(errorOnInvalidType = false) CustomUserDetails userDetails) {
+
+        // 로그인 여부 확인
+        String userId = (userDetails != null) ? userDetails.getUsername() : null;
+
+        return ResponseEntity.ok(ApiResponse.success(weddingHallService.getWeddingInfos(sort, userId)));
     }
 
     @Operation(summary = "웨딩홀에 대한 상세정보를 조회합니다.")

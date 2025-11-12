@@ -7,7 +7,7 @@ import com.swyp.wedding.dto.weddinghall.WeddingHallResponse;
 import com.swyp.wedding.entity.common.SortType;
 
 public interface WeddingHallService {
-    List<WeddingHallResponse> getWeddingInfos(SortType sort);
+    List<WeddingHallResponse> getWeddingInfos(SortType sort, String userId);
     boolean saveWedding(WeddingHallRequest request);
     WeddingHallResponse getWeddingInfo(Long id);
     boolean updateWedding(WeddingHallRequest request);
