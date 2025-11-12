@@ -3,12 +3,14 @@ package com.swyp.wedding.controller.weddinghall;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.swyp.wedding.dto.weddinghall.WeddingHallRequest;
 import com.swyp.wedding.dto.weddinghall.WeddingHallResponse;
+import com.swyp.wedding.entity.common.SortType;
 import com.swyp.wedding.service.weddinghall.impl.WeddingHallServiceImpl;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,10 +24,13 @@ public class WeddingApiController {
 
     private final WeddingHallServiceImpl weddingHallService;
 
-    @Operation(summary = "웨딩홀 리스트를 조회합니다.")
+    @Operation(summary = "웨딩홀 리스트를 조회합니다.",
+               description = "정렬 기준: RECENT(최신순), FAVORITE(인기순). 기본값은 최신순입니다.")
     @GetMapping
-    public ResponseEntity<List<WeddingHallResponse>> getWeddings() {
-        return ResponseEntity.ok(weddingHallService.getWeddingInfos());
+    public ResponseEntity<List<WeddingHallResponse>> getWeddings(
+            @Parameter(description = "정렬 기준: RECENT(최신순), FAVORITE(인기순)", example = "RECENT")
+            @RequestParam(required = false) SortType sort) {
+        return ResponseEntity.ok(weddingHallService.getWeddingInfos(sort));
     }
 
 

@@ -2,6 +2,7 @@ package com.swyp.wedding.entity.weddinghall;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Builder
 @AllArgsConstructor
@@ -28,4 +29,12 @@ public class WeddingHall {
     private String email;
 
     private String imageUrl;
+
+    @Column(name = "reg_dt")
+    private LocalDateTime regDt;
+
+    @PrePersist
+    protected void onCreate() {
+        regDt = LocalDateTime.now();
+    }
 }
