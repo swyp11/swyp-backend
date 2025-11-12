@@ -35,11 +35,23 @@ public class MakeupShopService {
                 .collect(Collectors.toList());
     }
 
-    // ID로 메이크업샵 조회
-    public MakeupShopResponse getMakeupShopById(Long id) {
+    // ID로 메이크업샵 조회 (로그인 여부에 따라 찜 정보 포함)
+    public MakeupShopResponse getMakeupShopById(Long id, String userId) {
         MakeupShop makeupShop = makeupShopRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("MakeupShop not found with id: " + id));
-        return MakeupShopResponse.from(makeupShop);
+
+        MakeupShopResponse response = MakeupShopResponse.from(makeupShop);
+
+        // 로그인한 사용자의 경우 찜 여부 확인
+        if (userId != null) {
+            User user = userRepository.findByUserId(userId).orElse(null);
+            if (user != null) {
+                boolean isLiked = likesRepository.existsByUserAndLikesTypeAndTargetId(user, LikesType.SHOP, id);
+                response.setIsLiked(isLiked);
+            }
+        }
+
+        return response;
     }
 
     // 새 메이크업샵 생성

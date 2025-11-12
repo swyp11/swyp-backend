@@ -46,11 +46,13 @@ public class DressShopController {
         return ResponseEntity.ok(dressShops);
     }
 
-    @Operation(summary = "특정 드레스샵 조회", description = "ID로 특정 드레스샵의 상세 정보를 조회합니다.")
+    @Operation(summary = "특정 드레스샵 조회", description = "ID로 특정 드레스샵의 상세 정보를 조회합니다. 로그인 시 찜 정보(isLiked)가 포함됩니다.")
     @GetMapping("/{id}")
     public ResponseEntity<DressShopResponse> getDressShopById(
-            @Parameter(description = "드레스샵 ID", required = true) @PathVariable Long id) {
-        DressShopResponse dressShop = dressShopService.getDressShopById(id);
+            @Parameter(description = "드레스샵 ID", required = true) @PathVariable Long id,
+            @AuthenticationPrincipal(errorOnInvalidType = false) CustomUserDetails userDetails) {
+        String userId = (userDetails != null) ? userDetails.getUsername() : null;
+        DressShopResponse dressShop = dressShopService.getDressShopById(id, userId);
         return ResponseEntity.ok(dressShop);
     }
 
@@ -82,13 +84,13 @@ public class DressShopController {
     @GetMapping("/{id}/dresses")
     public ResponseEntity<List<com.swyp.wedding.dto.dress.DressResponse>> getDressesByShop(
             @Parameter(description = "드레스샵 ID", required = true) @PathVariable Long id) {
-        // 1. 먼저 해당 ID의 DressShop을 조회하여 shop_name을 가져옴
-        DressShopResponse dressShop = dressShopService.getDressShopById(id);
-        
+        // 1. 먼저 해당 ID의 DressShop을 조회하여 shop_name을 가져옴 (찜 정보는 불필요하므로 null 전달)
+        DressShopResponse dressShop = dressShopService.getDressShopById(id, null);
+
         // 2. shop_name으로 Dress 목록 조회
-        List<com.swyp.wedding.dto.dress.DressResponse> dresses = 
+        List<com.swyp.wedding.dto.dress.DressResponse> dresses =
             dressService.getDressesByShopName(dressShop.getShopName());
-        
+
         return ResponseEntity.ok(dresses);
     }
 }

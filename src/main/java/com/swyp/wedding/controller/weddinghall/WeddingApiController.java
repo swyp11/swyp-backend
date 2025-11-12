@@ -40,10 +40,16 @@ public class WeddingApiController {
         return ResponseEntity.ok(ApiResponse.success(weddingHallService.getWeddingInfos(sort, userId)));
     }
 
-    @Operation(summary = "웨딩홀에 대한 상세정보를 조회합니다.")
+    @Operation(summary = "웨딩홀에 대한 상세정보를 조회합니다.", description = "로그인 시 찜 정보(isLiked)가 포함됩니다.")
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<WeddingHallResponse>> getWeddingInfo(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(ApiResponse.success(weddingHallService.getWeddingInfo(id)));
+    public ResponseEntity<ApiResponse<WeddingHallResponse>> getWeddingInfo(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal(errorOnInvalidType = false) CustomUserDetails userDetails) {
+
+        // 로그인 여부 확인
+        String userId = (userDetails != null) ? userDetails.getUsername() : null;
+
+        return ResponseEntity.ok(ApiResponse.success(weddingHallService.getWeddingInfo(id, userId)));
     }
 
     @Operation(summary = "웨딩홀에 대한 정보를 저장합니다.")

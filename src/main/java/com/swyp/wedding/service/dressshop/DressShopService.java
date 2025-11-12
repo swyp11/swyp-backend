@@ -35,11 +35,23 @@ public class DressShopService {
                 .collect(Collectors.toList());
     }
 
-    // ID로 드레스샵 조회
-    public DressShopResponse getDressShopById(Long id) {
+    // ID로 드레스샵 조회 (로그인 여부에 따라 찜 정보 포함)
+    public DressShopResponse getDressShopById(Long id, String userId) {
         DressShop dressShop = dressShopRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("DressShop not found with id: " + id));
-        return DressShopResponse.from(dressShop);
+
+        DressShopResponse response = DressShopResponse.from(dressShop);
+
+        // 로그인한 사용자의 경우 찜 여부 확인
+        if (userId != null) {
+            User user = userRepository.findByUserId(userId).orElse(null);
+            if (user != null) {
+                boolean isLiked = likesRepository.existsByUserAndLikesTypeAndTargetId(user, LikesType.SHOP, id);
+                response.setIsLiked(isLiked);
+            }
+        }
+
+        return response;
     }
 
     // 새 드레스샵 생성
