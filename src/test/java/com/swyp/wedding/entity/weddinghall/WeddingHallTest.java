@@ -18,6 +18,7 @@ class WeddingHallTest {
         String testAddress = "서울시";
         String testPhone = "010-1111-1111";
         String testEmail = "test@test";
+        String testImageUrl = "https://example.com/image.jpg";
 
         // when
         WeddingHall weddingHall = WeddingHall.builder()
@@ -28,6 +29,7 @@ class WeddingHallTest {
                 .address(testAddress)
                 .email(testEmail)
                 .parking(testParking)
+                .imageUrl(testImageUrl)
                 .build();
 
         // then
@@ -38,5 +40,6 @@ class WeddingHallTest {
         assertThat(weddingHall.getAddress()).isEqualTo(testAddress);
         assertThat(weddingHall.getAddress()).isEqualTo(testAddress);
         assertThat(weddingHall.getEmail()).isEqualTo(testEmail);
+        assertThat(weddingHall.getImageUrl()).isEqualTo(testImageUrl);
     }
 }
