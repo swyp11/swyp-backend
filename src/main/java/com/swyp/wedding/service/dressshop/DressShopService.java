@@ -48,7 +48,11 @@ public class DressShopService {
         if (userId != null) {
             User user = userRepository.findByUserId(userId).orElse(null);
             if (user != null) {
+<<<<<<< HEAD
                 boolean isLiked = likesRepository.existsByUserAndLikesTypeAndTargetId(user, LikesType.DRESS_SHOP, id);
+=======
+                boolean isLiked = likesRepository.existsByUserAndLikesTypeAndTargetId(user, LikesType.SHOP, id);
+>>>>>>> ef26183 (feat: 상세보기 api 찜여부 추가)
                 response.setIsLiked(isLiked);
             }
         }
