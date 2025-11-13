@@ -14,11 +14,11 @@ public class TokenResponse {
     private long expiresIn;
     private String tokenType;  // Bearer
 
-    public static TokenResponse of(String accessToken) {
+    public static TokenResponse of(String accessToken, long expiresInSeconds) {
         return TokenResponse.builder()
                 .accessToken(accessToken)
                 .tokenType("Bearer")
-                .expiresIn(3600L)
+                .expiresIn(expiresInSeconds)
                 .build();
     }
 }

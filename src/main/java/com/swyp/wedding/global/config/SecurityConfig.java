@@ -1,4 +1,4 @@
-package com.swyp.wedding.config;
+package com.swyp.wedding.global.config;
 
 import com.swyp.wedding.security.jwt.JwtFilter;
 import com.swyp.wedding.security.jwt.JwtProvider;
@@ -43,6 +43,10 @@ public class SecurityConfig {
         http
                 .csrf((auth) -> auth.disable());
 
+        //CORS 모두 허용
+        http
+                .cors(cors -> cors.disable());
+
         //From 로그인 방식 disable
         http
                 .formLogin((auth) -> auth.disable());
@@ -63,15 +67,32 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        // 인증이 필요없는 경로
-                        .requestMatchers("/", "/login", "/join" ,"/home", "/logout","/oauth/**" ,"/calendar/**" ).permitAll()
-                        // Swagger UI 관련 엔드포인트
-                        .requestMatchers("/api/swagger-ui/**", "/api-docs/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers(("/join/oAuth/extra-info")).authenticated() // 소셜 로그인 후 추가 정보 삽입 과정
+                        // Swagger UI 관련 엔드포인트 (정적 리소스 포함)
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
+                        // 인증이 필요없는 경로 (구체적인 경로부터 먼저)
+                        .requestMatchers("/api/user/join", "/api/user/join/oAuth/extra-info").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/", "/home", "/logout").permitAll()
+                        // 조회 API (GET) - 인증 불필요
+                        .requestMatchers(
+                                org.springframework.http.HttpMethod.GET,
+                                "/api/dress/**",
+                                "/api/dress-shop/**",
+                                "/api/makeup-shop/**",
+                                "/api/wedding/**",
+                                "/api/hall/**"
+                        ).permitAll()
                         // TODO 관리자의 경우
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        // 로그인한 유저의 경우
-                        .requestMatchers("/user" , "/calendar/**").hasRole("USER")
+                        // 로그인한 유저의 경우 (더 구체적인 경로를 뒤에 배치)
+                        .requestMatchers("/api/user/**", "/api/schedule/**").hasRole("USER")
                         .anyRequest().authenticated());
 
 

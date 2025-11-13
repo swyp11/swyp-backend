@@ -19,6 +19,7 @@ class WeddingHallRequestTest {
         String address = "test";
         String phone = "010-1111-1111";
         String email = "test@test";
+        String imageUrl = "https://example.com/image.jpg";
 
         WeddingHallRequest request = new WeddingHallRequest();
         request.setName(testName);
@@ -27,6 +28,7 @@ class WeddingHallRequestTest {
         request.setAddress(address);
         request.setPhone(phone);
         request.setEmail(email);
+        request.setImageUrl(imageUrl);
 
         // when
         WeddingHall weddingHall = request.toEntity();
@@ -38,5 +40,6 @@ class WeddingHallRequestTest {
         assertThat(weddingHall.getParking()).isEqualTo(request.getParking());
         assertThat(weddingHall.getEmail()).isEqualTo(request.getEmail());
         assertThat(weddingHall.getVenueType()).isEqualTo(request.getVenueType());
+        assertThat(weddingHall.getImageUrl()).isEqualTo(request.getImageUrl());
     }
 }

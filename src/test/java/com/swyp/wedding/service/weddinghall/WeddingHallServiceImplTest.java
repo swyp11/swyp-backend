@@ -22,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.swyp.wedding.dto.weddinghall.WeddingHallRequest;
 import com.swyp.wedding.dto.weddinghall.WeddingHallResponse;
+import com.swyp.wedding.entity.common.SortType;
 import com.swyp.wedding.entity.weddinghall.WeddingHall;
 import com.swyp.wedding.entity.weddinghall.WeddingHallEnum;
 import com.swyp.wedding.repository.weddinghall.WeddingHallRepository;
@@ -66,28 +67,28 @@ class WeddingHallServiceImplTest {
     }
 
     @Test
-    @DisplayName("웨딩홀 리스트 조회 - Repository가 빈 리스트를 반환하는 경우")
+    @DisplayName("웨딩홀 리스트 조회 - Repository가 빈 리스트를 반환하는 경우 (최신순)")
     void getWeddingInfos_WhenRepositoryReturnsEmptyList() {
         // given
-        given(weddingHallRepository.findAll()).willReturn(Collections.emptyList());
+        given(weddingHallRepository.findAllByOrderByRegDtDesc()).willReturn(Collections.emptyList());
 
         // when
-        List<WeddingHallResponse> responses = weddingHallService.getWeddingInfos();
+        List<WeddingHallResponse> responses = weddingHallService.getWeddingInfos(SortType.RECENT);
 
         // then
         assertThat(responses).isEmpty();
-        verify(weddingHallRepository).findAll();
+        verify(weddingHallRepository).findAllByOrderByRegDtDesc();
     }
 
     @Test
-    @DisplayName("웨딩홀 리스트 조회 - Repository가 데이터를 반환하는 경우")
+    @DisplayName("웨딩홀 리스트 조회 - Repository가 데이터를 반환하는 경우 (최신순)")
     void getWeddingInfos_WhenRepositoryReturnsData() {
         // given
         List<WeddingHall> weddingHalls = Arrays.asList(testWeddingHall1, testWeddingHall2);
-        given(weddingHallRepository.findAll()).willReturn(weddingHalls);
+        given(weddingHallRepository.findAllByOrderByRegDtDesc()).willReturn(weddingHalls);
 
         // when
-        List<WeddingHallResponse> responses = weddingHallService.getWeddingInfos();
+        List<WeddingHallResponse> responses = weddingHallService.getWeddingInfos(SortType.RECENT);
 
         // then
         assertThat(responses).hasSize(2);
@@ -102,7 +103,46 @@ class WeddingHallServiceImplTest {
         assertThat(response2.getName()).isEqualTo("로얄 호텔");
         assertThat(response2.getVenueType()).isEqualTo(WeddingHallEnum.HOTEL);
 
-        verify(weddingHallRepository).findAll();
+        verify(weddingHallRepository).findAllByOrderByRegDtDesc();
+    }
+
+    @Test
+    @DisplayName("웨딩홀 리스트 조회 - 인기순 정렬")
+    void getWeddingInfos_OrderByFavorite() {
+        // given
+        List<WeddingHall> weddingHalls = Arrays.asList(testWeddingHall2, testWeddingHall1);
+        given(weddingHallRepository.findAllOrderByLikesCountDesc()).willReturn(weddingHalls);
+
+        // when
+        List<WeddingHallResponse> responses = weddingHallService.getWeddingInfos(SortType.FAVORITE);
+
+        // then
+        assertThat(responses).hasSize(2);
+
+        WeddingHallResponse response1 = responses.get(0);
+        assertThat(response1.getId()).isEqualTo(2L);
+        assertThat(response1.getName()).isEqualTo("로얄 호텔");
+
+        WeddingHallResponse response2 = responses.get(1);
+        assertThat(response2.getId()).isEqualTo(1L);
+        assertThat(response2.getName()).isEqualTo("그랜드 웨딩홀");
+
+        verify(weddingHallRepository).findAllOrderByLikesCountDesc();
+    }
+
+    @Test
+    @DisplayName("웨딩홀 리스트 조회 - 정렬 기본값 (최신순)")
+    void getWeddingInfos_DefaultSort() {
+        // given
+        List<WeddingHall> weddingHalls = Arrays.asList(testWeddingHall1, testWeddingHall2);
+        given(weddingHallRepository.findAllByOrderByRegDtDesc()).willReturn(weddingHalls);
+
+        // when
+        List<WeddingHallResponse> responses = weddingHallService.getWeddingInfos(null);
+
+        // then
+        assertThat(responses).hasSize(2);
+        verify(weddingHallRepository).findAllByOrderByRegDtDesc();
     }
 
     /*

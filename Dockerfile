@@ -1,17 +1,17 @@
-# Start with a base image that includes OpenJDK
-FROM openjdk:17-jdk-slim
+# Start with a base image that includes OpenJDK (Eclipse Temurin)
+FROM eclipse-temurin:17-jdk-alpine
 
 # Install curl for health checks
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache curl
 
 # Set the working directory inside the container
 WORKDIR /app
 
 # Copy the build artifact to the container
-COPY build/libs/backend-0.0.1-SNAPSHOT.jar app.jar
+COPY build/libs/*.jar app.jar
 
 # Add a non-root user for security
-RUN groupadd -r spring && useradd -r -g spring spring
+RUN addgroup -S spring && adduser -S spring -G spring
 RUN chown -R spring:spring /app
 USER spring
 

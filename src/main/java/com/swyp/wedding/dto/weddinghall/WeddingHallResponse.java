@@ -14,6 +14,8 @@ public class WeddingHallResponse {
     private String address;
     private String phone;
     private String email;
+    private String imageUrl;
+    private Boolean isLiked;        // 로그인한 사용자의 찜 여부 (비로그인 시 null)
 
     public static WeddingHallResponse from(WeddingHall weddingHall) {
         WeddingHallResponse response = new WeddingHallResponse();
@@ -25,6 +27,7 @@ public class WeddingHallResponse {
         response.setAddress(weddingHall.getAddress());
         response.setPhone(weddingHall.getPhone());
         response.setEmail(weddingHall.getEmail());
+        response.setImageUrl(weddingHall.getImageUrl());
 
         return response;
     }
