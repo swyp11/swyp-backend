@@ -2,7 +2,6 @@ package com.swyp.wedding.controller.user;
 
 
 import com.swyp.wedding.dto.auth.LoginRequest;
-import com.swyp.wedding.dto.auth.OAuthCodeRequest;
 import com.swyp.wedding.dto.auth.TokenResponse;
 import com.swyp.wedding.global.response.ApiResponse;
 import com.swyp.wedding.service.AuthService;
@@ -22,9 +21,11 @@ public class AuthController {
 
     @PostMapping("/oauth/login/{provider}")
     @Operation(summary = "OAuth 로그인", description = "provider에는 현재 google만 존재 이후 추가 가능성 대비")
-    public ResponseEntity<ApiResponse<TokenResponse>> OAuthLogin(@PathVariable String provider,
-                                                     @RequestBody OAuthCodeRequest auth) {
-        TokenResponse jwtToken = authService.processOAuthLogin(provider, auth.getCode(), auth.getRedirectUri());
+    public ResponseEntity<ApiResponse<TokenResponse>> OAuthLogin(
+            @PathVariable String provider,
+            @RequestParam String code,
+            @RequestParam String redirectUri) {
+        TokenResponse jwtToken = authService.processOAuthLogin(provider, code, redirectUri);
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + jwtToken.getAccessToken())
                 .body(ApiResponse.success(jwtToken));
