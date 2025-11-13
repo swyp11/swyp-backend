@@ -1,5 +1,13 @@
 package com.swyp.wedding.service.makeupshop;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.swyp.wedding.dto.makeupshop.MakeupShopRequest;
 import com.swyp.wedding.dto.makeupshop.MakeupShopResponse;
 import com.swyp.wedding.entity.common.SortType;
@@ -10,14 +18,8 @@ import com.swyp.wedding.entity.user.User;
 import com.swyp.wedding.repository.likes.LikesRepository;
 import com.swyp.wedding.repository.makeupshop.MakeupShopRepository;
 import com.swyp.wedding.repository.user.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +48,11 @@ public class MakeupShopService {
         if (userId != null) {
             User user = userRepository.findByUserId(userId).orElse(null);
             if (user != null) {
+<<<<<<< HEAD
                 boolean isLiked = likesRepository.existsByUserAndLikesTypeAndTargetId(user, LikesType.MAKEUP_SHOP, id);
+=======
+                boolean isLiked = likesRepository.existsByUserAndLikesTypeAndTargetId(user, LikesType.SHOP, id);
+>>>>>>> ef26183 (feat: 상세보기 api 찜여부 추가)
                 response.setIsLiked(isLiked);
             }
         }

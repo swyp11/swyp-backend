@@ -1,21 +1,30 @@
 package com.swyp.wedding.controller.makeupshop;
 
-import com.swyp.wedding.global.response.ApiResponse;
-import com.swyp.wedding.security.user.CustomUserDetails;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.swyp.wedding.dto.makeupshop.MakeupShopRequest;
 import com.swyp.wedding.dto.makeupshop.MakeupShopResponse;
 import com.swyp.wedding.entity.common.SortType;
+import com.swyp.wedding.global.response.ApiResponse;
+import com.swyp.wedding.security.user.CustomUserDetails;
 import com.swyp.wedding.service.makeupshop.MakeupShopService;
 
-import java.util.List;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 
 @Tag(name = "메이크업샵", description = "웨딩 메이크업 샵 관리 API")
 @RestController
@@ -47,7 +56,11 @@ public class MakeupShopController {
 
     @Operation(summary = "특정 메이크업샵 조회", description = "ID로 특정 메이크업샵의 상세 정보를 조회합니다. 로그인 시 찜 정보(isLiked)가 포함됩니다.")
     @GetMapping("/{id}")
+<<<<<<< HEAD
     public ResponseEntity<ApiResponse<MakeupShopResponse>> getMakeupShopById(
+=======
+    public ResponseEntity<MakeupShopResponse> getMakeupShopById(
+>>>>>>> ef26183 (feat: 상세보기 api 찜여부 추가)
             @Parameter(description = "메이크업샵 ID", required = true) @PathVariable Long id,
             @AuthenticationPrincipal(errorOnInvalidType = false) CustomUserDetails userDetails) {
 
@@ -55,7 +68,11 @@ public class MakeupShopController {
         String userId = (userDetails != null) ? userDetails.getUsername() : null;
 
         MakeupShopResponse makeupShop = makeupShopService.getMakeupShopById(id, userId);
+<<<<<<< HEAD
         return ResponseEntity.ok(ApiResponse.success(makeupShop));
+=======
+        return ResponseEntity.ok(makeupShop);
+>>>>>>> ef26183 (feat: 상세보기 api 찜여부 추가)
     }
 
     @Operation(summary = "새 메이크업샵 생성", description = "새로운 메이크업샵을 등록합니다.")

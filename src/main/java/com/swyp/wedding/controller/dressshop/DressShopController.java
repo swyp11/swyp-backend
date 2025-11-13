@@ -1,22 +1,31 @@
 package com.swyp.wedding.controller.dressshop;
 
-import com.swyp.wedding.global.response.ApiResponse;
-import com.swyp.wedding.security.user.CustomUserDetails;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.swyp.wedding.dto.dressshop.DressShopRequest;
 import com.swyp.wedding.dto.dressshop.DressShopResponse;
 import com.swyp.wedding.entity.common.SortType;
-import com.swyp.wedding.service.dressshop.DressShopService;
+import com.swyp.wedding.global.response.ApiResponse;
+import com.swyp.wedding.security.user.CustomUserDetails;
 import com.swyp.wedding.service.dress.DressService;
+import com.swyp.wedding.service.dressshop.DressShopService;
 
-import java.util.List;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 
 @Tag(name = "드레스샵", description = "웨딩 드레스 샵 관리 API")
 @RestController
@@ -27,8 +36,8 @@ public class DressShopController {
     private final DressShopService dressShopService;
     private final DressService dressService;
 
-    @Operation(summary = "드레스샵 목록 조회",
-               description = "드레스샵 목록을 조회합니다. 파라미터로 검색 및 정렬 옵션을 지정할 수 있습니다. 여러 조건을 동시에 사용 가능합니다. 로그인 시 찜 정보(isLiked)가 포함됩니다.")
+    @Operation(summary = "드레스샵 목록 조회", 
+               description = "드레스샵 목록을 조회합니다. 파라미터로 검색 및 정렬 옵션을 지정할 수 있습니다. 여러 조건을 동시에 사용 가능합니다.")
     @GetMapping
     public ResponseEntity<ApiResponse<List<DressShopResponse>>> getAllDressShops(
             @Parameter(description = "샵 이름 (부분 일치 검색)") @RequestParam(required = false) String shopName,
@@ -47,7 +56,7 @@ public class DressShopController {
         return ResponseEntity.ok(ApiResponse.success(dressShops));
     }
 
-    @Operation(summary = "특정 드레스샵 조회", description = "ID로 특정 드레스샵의 상세 정보를 조회합니다. 로그인 시 찜 정보(isLiked)가 포함됩니다.")
+    @Operation(summary = "특정 드레스샵 조회", description = "ID로 특정 드레스샵의 상세 정보를 조회합니다.")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<DressShopResponse>> getDressShopById(
             @Parameter(description = "드레스샵 ID", required = true) @PathVariable Long id,

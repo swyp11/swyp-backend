@@ -39,3 +39,9 @@ out/
 #application-oauth2.yml
 src/main/resources/application-oauth2.yml
 /application-oauth2.yml
+<<<<<<< HEAD
+=======
+*.yml
+
+.env
+>>>>>>> f3f6662 (fix: 키 값 숨기기)
