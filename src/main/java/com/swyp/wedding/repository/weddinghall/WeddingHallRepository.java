@@ -1,11 +1,12 @@
 package com.swyp.wedding.repository.weddinghall;
 
-import com.swyp.wedding.entity.weddinghall.WeddingHall;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.swyp.wedding.entity.weddinghall.WeddingHall;
 
 @Repository
 public interface WeddingHallRepository extends JpaRepository<WeddingHall, Long> {
@@ -19,4 +20,8 @@ public interface WeddingHallRepository extends JpaRepository<WeddingHall, Long> 
            "GROUP BY wh.id " +
            "ORDER BY COUNT(l.id) DESC, wh.regDt DESC")
     List<WeddingHall> findAllOrderByLikesCountDesc();
+
+    @Query("SELECT wh FROM WeddingHall wh " +
+           "WHERE wh.name LIKE %:keyword%")
+    List<WeddingHall> findByKeyword(String keyword);
 }
