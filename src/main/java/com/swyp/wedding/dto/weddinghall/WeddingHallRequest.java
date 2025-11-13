@@ -13,6 +13,7 @@ public class WeddingHallRequest {
     private String address;
     private String phone;
     private String email;
+    private String imageUrl;
 
     public WeddingHall toEntity() {
         return WeddingHall.builder()
@@ -22,6 +23,7 @@ public class WeddingHallRequest {
                 .address(address)
                 .phone(phone)
                 .email(email)
+                .imageUrl(imageUrl)
                 .build();
     }
 }

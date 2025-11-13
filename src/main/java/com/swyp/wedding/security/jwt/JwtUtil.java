@@ -64,4 +64,9 @@ public class JwtUtil {
         return expiration.before(new Date());
     }
 
+    // Expiration 시간 getter (초 단위)
+    public long getExpirationInSeconds() {
+        return expirationMs / 1000;
+    }
+
 }
