@@ -43,7 +43,9 @@ public class JwtFilter extends OncePerRequestFilter {
                path.equals("/") ||
                path.equals("/login") ||
                path.equals("/join") ||
-               path.startsWith("/oauth/");
+               // OAuth 및 인증 관련 경로
+               path.startsWith("/api/auth/") ||
+               path.startsWith("/api/user/join");
     }
 
     @Override
