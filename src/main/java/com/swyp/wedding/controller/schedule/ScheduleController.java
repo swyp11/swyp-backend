@@ -4,6 +4,7 @@ import com.swyp.wedding.dto.schedule.ScheduleRequest;
 import com.swyp.wedding.dto.schedule.ScheduleResponse;
 import com.swyp.wedding.dto.schedule.ScheduleMonthResponse;
 import com.swyp.wedding.dto.schedule.ScheduleWeekResponse;
+import com.swyp.wedding.global.response.ApiResponse;
 import com.swyp.wedding.security.user.CustomUserDetails;
 import com.swyp.wedding.service.ScheduleService;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,65 +26,65 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping
-    public ResponseEntity<ScheduleResponse> createEvent(
+    public ResponseEntity<ApiResponse<ScheduleResponse>> createEvent(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody ScheduleRequest scheduleRequest){
 
         ScheduleResponse response =  scheduleService.createEvent(userDetails.getUsername(), scheduleRequest);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @Schema(description = "월별 조회")
     @GetMapping("/month")
-    public ResponseEntity<List<ScheduleMonthResponse>> getMonthEvents(
+    public ResponseEntity<ApiResponse<List<ScheduleMonthResponse>>> getMonthEvents(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam int year, int month) {
-        return ResponseEntity.ok(scheduleService.getMonthEvents(userDetails.getUsername(), year, month));
+        return ResponseEntity.ok(ApiResponse.success(scheduleService.getMonthEvents(userDetails.getUsername(), year, month)));
     }
 
     @Schema(description = "주별 조회")
     @GetMapping("/week")
-    public ResponseEntity<List<ScheduleWeekResponse>> getWeekEvents(
+    public ResponseEntity<ApiResponse<List<ScheduleWeekResponse>>> getWeekEvents(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam LocalDate startDate) {
         List<ScheduleWeekResponse> responses = scheduleService.getWeekEvents(userDetails.getUsername(), startDate);
-        return ResponseEntity.ok(responses);
+        return ResponseEntity.ok(ApiResponse.success(responses));
     }
 
     @Schema(description = "하루(당일) 조회")
     @GetMapping("/day")
-    public ResponseEntity< List<ScheduleResponse>> getDayEvents(
+    public ResponseEntity<ApiResponse<List<ScheduleResponse>>> getDayEvents(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam LocalDate date) {
         List<ScheduleResponse> response = scheduleService.getDayEvents(userDetails.getUsername(),date);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @Schema(description = "스케쥴 하나의 데이터 조회")
     @GetMapping("/{id}")
-    public ResponseEntity<ScheduleResponse> getEventId(
+    public ResponseEntity<ApiResponse<ScheduleResponse>> getEventId(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long id) {
         ScheduleResponse response = scheduleService.getEventById(userDetails.getUsername(),id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @Schema(description = "수정")
     @PutMapping("/{id}")
-    public ResponseEntity<ScheduleResponse> updateEvent(
+    public ResponseEntity<ApiResponse<ScheduleResponse>> updateEvent(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long id,
             @RequestBody ScheduleRequest request) {
         ScheduleResponse response = scheduleService.updateEvent(userDetails.getUsername(),id, request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @Schema(description = "삭제")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEvent(
+    public ResponseEntity<ApiResponse<Void>> deleteEvent(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long id) {
         scheduleService.deleteEvent(userDetails.getUsername(),id);
-        return ResponseEntity.noContent().build(); // HTTP 204
+        return ResponseEntity.ok(ApiResponse.success());
     }
 }
