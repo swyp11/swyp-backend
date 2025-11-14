@@ -45,32 +45,36 @@ public class ScheduleService {
         return ScheduleResponse.fromEntity(saved);
     }
 
-    // 월별 조회
+    // 월별 조회 (해당 월과 겹치는 모든 일정 조회)
     @Transactional(readOnly = true)
     public List<ScheduleMonthResponse> getMonthEvents(String username, int year, int month) {
-        LocalDate startDate = LocalDate.of(year, month, 1);
-        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
-        return scheduleRepository.findByUser_UserIdAndStartDateBetween(username, startDate, endDate)
+        LocalDate searchStart = LocalDate.of(year, month, 1);
+        LocalDate searchEnd = searchStart.withDayOfMonth(searchStart.lengthOfMonth());
+        return scheduleRepository.findByUser_UserIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+                username, searchEnd, searchStart)
                 .stream()
                 .map(ScheduleMonthResponse::fromEntity)
                 .toList();
     }
 
-    // 주별 조회
+    // 주별 조회 (해당 주와 겹치는 모든 일정 조회)
     @Transactional(readOnly = true)
     public List<ScheduleWeekResponse> getWeekEvents(String username, LocalDate startDate) {
         // 7일 범위 자동 계산
-        LocalDate endDate = startDate.plusDays(6);
-        return scheduleRepository.findByUser_UserIdAndStartDateBetween(username, startDate, endDate)
+        LocalDate searchStart = startDate;
+        LocalDate searchEnd = startDate.plusDays(6);
+        return scheduleRepository.findByUser_UserIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+                username, searchEnd, searchStart)
                 .stream()
                 .map(ScheduleWeekResponse::fromEntity)
                 .toList();
     }
 
-    // 일별 조회
+    // 일별 조회 (해당 날짜를 포함하는 모든 일정 조회)
     @Transactional(readOnly = true)
     public List<ScheduleResponse> getDayEvents(String username, LocalDate date) {
-        return scheduleRepository.findByUser_UserIdAndStartDate(username,date)
+        return scheduleRepository.findByUser_UserIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+                username, date, date)
                 .stream()
                 .map(ScheduleResponse::fromEntity)
                 .toList();
