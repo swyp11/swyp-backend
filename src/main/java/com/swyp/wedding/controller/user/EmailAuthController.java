@@ -1,7 +1,7 @@
 package com.swyp.wedding.controller.user;
 
 import com.swyp.wedding.dto.auth.EmailAuthRequest;
-import com.swyp.wedding.service.EmailAuthService;
+import com.swyp.wedding.service.user.EmailAuthService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

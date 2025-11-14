@@ -4,7 +4,7 @@ import com.swyp.wedding.dto.auth.OAuthExtraInfoRequest;
 import com.swyp.wedding.dto.user.UserRequest;
 import com.swyp.wedding.dto.user.UserResponse;
 import com.swyp.wedding.security.user.CustomUserDetails;
-import com.swyp.wedding.service.JoinService;
+import com.swyp.wedding.service.user.JoinService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

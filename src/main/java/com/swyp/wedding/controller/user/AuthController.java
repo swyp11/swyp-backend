@@ -4,7 +4,7 @@ package com.swyp.wedding.controller.user;
 import com.swyp.wedding.dto.auth.LoginRequest;
 import com.swyp.wedding.dto.auth.OAuthCodeRequest;
 import com.swyp.wedding.dto.auth.TokenResponse;
-import com.swyp.wedding.service.AuthService;
+import com.swyp.wedding.service.user.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

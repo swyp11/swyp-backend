@@ -1,6 +1,6 @@
 package com.swyp.wedding.controller.user;
 
-import com.swyp.wedding.service.PasswordResetService;
+import com.swyp.wedding.service.user.PasswordResetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
