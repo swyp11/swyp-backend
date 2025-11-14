@@ -1,4 +1,4 @@
-package com.swyp.wedding.service;
+package com.swyp.wedding.service.schedule;
 
 import com.swyp.wedding.dto.schedule.ScheduleRequest;
 import com.swyp.wedding.dto.schedule.ScheduleResponse;

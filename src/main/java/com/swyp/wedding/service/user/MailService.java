@@ -1,4 +1,4 @@
-package com.swyp.wedding.service;
+package com.swyp.wedding.service.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;

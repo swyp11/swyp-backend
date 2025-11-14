@@ -1,4 +1,4 @@
-package com.swyp.wedding.service;
+package com.swyp.wedding.service.user;
 
 import com.swyp.wedding.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
