@@ -8,18 +8,16 @@ import com.swyp.wedding.service.user.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/oauth/login/{provider}")
+    @PostMapping("/oauth/{provider}")
     @Operation(summary = "OAuth 로그인" ,description = "provider에는 현재 google만 존재 이후 추가 가능성 대비")
     public ResponseEntity<TokenResponse> OAuthLogin(@PathVariable String provider,
                                                      @RequestBody OAuthCodeRequest auth){
