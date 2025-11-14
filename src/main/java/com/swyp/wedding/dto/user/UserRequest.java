@@ -10,20 +10,19 @@ import java.time.LocalDate;
 @Data
 public class UserRequest {
     private Long id;
-    private String userId;
+    private String userId; // = email
     private String password;
     private String nickname;
     private LocalDate birth;
     private LocalDate weddingDate;
-    private String email;
     private String provider;
     private String providerId;
     private UserEnum auth;
     private WeddingRole weddingRole;
 
     // 현재 미사용
-    private String phoneNumber;
-    private String address;
+//    private String phoneNumber;
+//    private String address;
 
     public User toEntity() {
         return User.builder()
@@ -32,9 +31,6 @@ public class UserRequest {
                 .nickname(nickname)
                 .birth(birth)
                 .weddingDate(weddingDate)
-                .phoneNumber(phoneNumber)
-                .address(address)
-                .email(email)
                 .provider(provider)
                 .providerId(providerId)
                 .auth(auth)
