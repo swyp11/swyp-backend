@@ -63,15 +63,23 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        // 인증이 필요없는 경로
-                        .requestMatchers("/", "/login", "/api/email/**", "api/join" ,"/home", "/logout","/oauth/**" ,"/calendar/**" ).permitAll()
-                        // Swagger UI 관련 엔드포인트
-                        .requestMatchers("/api/swagger-ui/**", "/api-docs/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers(("/api/join/oAuth/extra-info")).authenticated() // 소셜 로그인 후 추가 정보 삽입 과정
+                        // OAuth 추가정보 입력 API (로그인 후 접근)
+                        .requestMatchers("/api/users/oauth-info").authenticated()
                         // TODO 관리자의 경우
                         .requestMatchers("/admin").hasRole("ADMIN")
                         // 로그인한 유저의 경우
-                        .requestMatchers("/user" , "/calendar/**").hasRole("USER")
+                        .requestMatchers( "/api/schedule/**").hasRole("USER")
+
+                        // 인증이 필요없는 경로
+                        .requestMatchers(
+                                "/api/users/join",
+                                "/api/users/email-auth",
+                                "/api/users/email-auth/verify",
+                                "/api/auth/login",
+                                "/api/auth/oauth/**",
+                                "/api/password/reset/**"
+                        ).permitAll()
+                        .requestMatchers("/api/swagger-ui/**", "/api-docs/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated());
 
 
