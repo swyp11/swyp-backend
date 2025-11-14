@@ -78,6 +78,6 @@ public class WeddingApiController {
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<WeddingHallResponse>>> searchWeddings(@RequestParam String keyword) {
         List<WeddingHallResponse> results = weddingHallService.searchWeddings(keyword);
-        return ResponseEntity.ok(ApiResponse.success());
+        return ResponseEntity.ok(ApiResponse.success(results));
     }
 }
