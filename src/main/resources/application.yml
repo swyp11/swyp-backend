@@ -19,6 +19,7 @@ spring:
     port: ${MAIL_PORT:587}                 # TLS 포트 (기본 587)
     username: ${MAIL_USERNAME}   # 발신자 계정
     password: ${MAIL_PASSWORD}           # 로그인 비밀번호
+    from: ${MAIL_FROM:${MAIL_USERNAME}}  # 발신자 이메일 주소
     properties:
       mail:
         smtp:

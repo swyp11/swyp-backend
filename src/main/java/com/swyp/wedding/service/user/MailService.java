@@ -2,6 +2,7 @@ package com.swyp.wedding.service.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,16 @@ public class MailService {
 
     private final JavaMailSender mailSender;
 
+    @Value("${spring.mail.from}")
+    private String fromEmail;
+
     // 공통 메일 전송 로직
     public void send(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
-        message.setFrom("hj_3963@naver.com");
+        message.setFrom(fromEmail);
         mailSender.send(message);
     }
 }

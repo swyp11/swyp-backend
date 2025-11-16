@@ -52,7 +52,7 @@ public class AuthService {
 
         // 4️. JWT 발급 후 반환
         String accessToken = jwtUtil.createToken(user.getUserId(), user.getAuth().name());
-        return TokenResponse.of(accessToken);
+        return TokenResponse.of(accessToken, jwtUtil.getExpirationInSeconds());
     }
 
     // 신규 회원 등록
@@ -94,7 +94,7 @@ public class AuthService {
             String token = jwtUtil.createToken(username, role);
 
             // 4. 응답 객체 반환
-            return TokenResponse.of(token);
+            return TokenResponse.of(token, jwtUtil.getExpirationInSeconds());
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException("잘못된 아이디/비밀번호입니다.");
         } catch (UsernameNotFoundException e) {
