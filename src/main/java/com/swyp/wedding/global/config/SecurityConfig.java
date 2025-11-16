@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class    SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final JwtProvider jwtProvider;
@@ -83,9 +83,9 @@ public class SecurityConfig {
                                 "/api/user/join",
                                 "/api/user/email-auth",
                                 "/api/user/email-auth/verify",
+                                "/api/user/password/reset",
                                 "/api/auth/login",
-                                "/api/auth/oauth/**",
-                                "/api/password/reset/**"
+                                "/api/auth/oauth/**"
                         ).permitAll()
                         .requestMatchers("/", "/home", "/logout").permitAll()
                         // 조회 API (GET) - 인증 불필요
