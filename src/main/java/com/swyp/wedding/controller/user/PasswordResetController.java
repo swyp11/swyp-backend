@@ -1,0 +1,44 @@
+package com.swyp.wedding.controller.user;
+
+import com.swyp.wedding.dto.auth.EmailAuthRequest;
+import com.swyp.wedding.dto.auth.LoginRequest;
+import com.swyp.wedding.entity.user.AuthPurpose;
+import com.swyp.wedding.entity.user.EmailAuthCode;
+import com.swyp.wedding.service.user.AuthCodeService;
+import com.swyp.wedding.service.user.PasswordResetService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/password")
+@RequiredArgsConstructor
+
+public class PasswordResetController {
+
+    private final PasswordResetService passwordResetService;
+    private final AuthCodeService authCodeService;
+
+    // 1. 비밀번호 초기화 요청 - 찾기를 위해 인증 코드 발송 (인증 코드 전송)
+    @PostMapping("/reset/request")
+    public ResponseEntity<String> requestReset(@RequestParam String email) {
+        passwordResetService.sendResetCode(email);
+        return ResponseEntity.ok("비밀번호 재설정 코드가 이메일로 발송되었습니다.");
+    }
+
+    // 2. 코드 검증
+    @PostMapping("/reset/verify")
+    public ResponseEntity<String> verifyCode(@RequestBody EmailAuthRequest request) {
+        boolean verified = passwordResetService.verifyResetCode(request.getEmail(), request.getCode());
+        if (!verified) return ResponseEntity.badRequest().body("인증 코드가 올바르지 않습니다.");
+        authCodeService.markVerified(request.getEmail(), AuthPurpose.PASSWORD_RESET);
+        return ResponseEntity.ok("인증이 완료되었습니다.");
+    }
+
+    // 3. 새 비밀번호 설정
+    @PatchMapping("/reset/confirm")
+    public ResponseEntity<String> confirmReset(@RequestBody LoginRequest request) {
+        passwordResetService.updatePassword(request.getUserId(), request.getPassword());
+        return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+    }
+}

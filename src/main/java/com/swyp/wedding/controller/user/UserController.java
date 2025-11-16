@@ -1,12 +1,15 @@
 package com.swyp.wedding.controller.user;
 
+import com.swyp.wedding.dto.auth.EmailAuthRequest;
 import com.swyp.wedding.dto.auth.OAuthExtraInfoRequest;
 import com.swyp.wedding.dto.user.UserRequest;
 import com.swyp.wedding.dto.user.UserResponse;
 import com.swyp.wedding.dto.user.UserUpdateRequest;
 import com.swyp.wedding.global.response.ApiResponse;
+import com.swyp.wedding.entity.user.AuthPurpose;
 import com.swyp.wedding.security.user.CustomUserDetails;
-import com.swyp.wedding.service.JoinService;
+import com.swyp.wedding.service.user.AuthCodeService;
+import com.swyp.wedding.service.user.JoinService;
 import com.swyp.wedding.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,22 +21,45 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "사용자", description = "사용자 관리 API")
 @RestController
-@RequestMapping("/api/user")
 @RequiredArgsConstructor
+@RequestMapping("/api/user")
 public class UserController {
 
     private final JoinService joinService;
     private final UserService userService;
+    private final AuthCodeService authCodeService;
 
+    // 1. 이메일 인증코드 발송
+    @PostMapping("/email-auth")
+    @Operation(summary = "이메일 인증코드 발송")
+    public ResponseEntity<ApiResponse<String>> sendAuthCode(@RequestParam String email) {
+        authCodeService.sendAuthCode(email, AuthPurpose.SIGNUP);
+        return ResponseEntity.ok(ApiResponse.success("인증 코드가 이메일로 전송되었습니다."));
+    }
+
+    // 2. 이메일 인증코드 검증
+    @PostMapping("/email-auth/verify")
+    @Operation(summary = "이메일 인증코드 검증")
+    public ResponseEntity<ApiResponse<String>> verifyAuthCode(@RequestBody EmailAuthRequest request) {
+        boolean verified  = authCodeService.verifyCode(request.getEmail(), request.getCode(), AuthPurpose.SIGNUP);
+        if (!verified) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("인증코드가 올바르지 않거나 만료되었습니다."));
+        }
+        authCodeService.markVerified(request.getEmail(), AuthPurpose.SIGNUP);
+        return ResponseEntity.ok(ApiResponse.success("이메일 인증이 완료되었습니다."));
+    }
+
+    // 3. 회원가입(인증 완료 후 호출)
     @PostMapping("/join")
     @Operation(summary = "회원가입")
-    public ResponseEntity<ApiResponse<String>> JoinProcess(@RequestBody UserRequest userRequest) {
-        String result = joinService.JoinProcess(userRequest);
-        return ResponseEntity.ok(ApiResponse.success(result));
+    public ResponseEntity<ApiResponse<String>> joinProcess(@RequestBody UserRequest userRequest) {
+        joinService.joinProcess(userRequest);
+        return ResponseEntity.ok(ApiResponse.success("회원가입이 완료되었습니다."));
     }
 
     @Schema(description = "OAuth로그인 후 회원가입 당시 필요한 추가 정보 입력 api")
     @PostMapping("/join/oAuth/extra-info")
+    @Operation(summary = "OAuth 추가 정보 입력")
     public ResponseEntity<ApiResponse<UserResponse>> OAuthJoinProcess(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                          @RequestBody OAuthExtraInfoRequest request) {
          UserResponse userResponse = joinService.OAuthJoinProcess(userDetails, request);
