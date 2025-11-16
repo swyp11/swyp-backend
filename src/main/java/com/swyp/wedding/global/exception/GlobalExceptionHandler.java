@@ -138,6 +138,17 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * IllegalStateException 예외 처리
+     */
+    @ExceptionHandler(IllegalStateException.class)
+    protected ResponseEntity<ApiResponse<Void>> handleIllegalStateException(IllegalStateException e) {
+        log.error("IllegalStateException: {}", e.getMessage(), e);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(ErrorCode.INVALID_INPUT_VALUE.getCode(), e.getMessage()));
+    }
+
+    /**
      * 기타 모든 예외 처리
      */
     @ExceptionHandler(Exception.class)

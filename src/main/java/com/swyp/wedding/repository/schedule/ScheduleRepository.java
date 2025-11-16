@@ -1,12 +1,13 @@
 package com.swyp.wedding.repository.schedule;
 
-import com.swyp.wedding.entity.schedule.Schedule;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.swyp.wedding.entity.schedule.Schedule;
 
 @Repository
 public interface ScheduleRepository extends JpaRepository <Schedule, Long>{
@@ -21,7 +22,7 @@ public interface ScheduleRepository extends JpaRepository <Schedule, Long>{
 
     Optional<Schedule> findByIdAndUser_UserId(Long id, String username);
 
-    // id별 조회
-
+    // 알림 보낼 일정 조회 (모든 사용자)
+    List<Schedule> findByUser_UserId(String userId);
 
 }
