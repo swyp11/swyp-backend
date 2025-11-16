@@ -4,6 +4,7 @@ import com.swyp.wedding.dto.auth.EmailAuthRequest;
 import com.swyp.wedding.dto.auth.EmailVerificationResponse;
 import com.swyp.wedding.dto.auth.OAuthExtraInfoRequest;
 import com.swyp.wedding.dto.user.PasswordResetRequest;
+import com.swyp.wedding.dto.user.PasswordUpdateRequest;
 import com.swyp.wedding.dto.user.UserRequest;
 import com.swyp.wedding.dto.user.UserResponse;
 import com.swyp.wedding.dto.user.UserUpdateRequest;
@@ -107,4 +108,13 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success(userResponse));
     }
 
+    @Operation(summary = "비밀번호 변경", description = "현재 비밀번호를 확인하고 새 비밀번호로 변경합니다.")
+    @PatchMapping("/password")
+    public ResponseEntity<ApiResponse<String>> updatePassword(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                              @Valid @RequestBody PasswordUpdateRequest request) {
+        userService.updatePassword(userDetails, request);
+        return ResponseEntity.ok(ApiResponse.success("비밀번호가 성공적으로 변경되었습니다."));
+    }
+
 }
+
