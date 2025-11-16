@@ -1,4 +1,4 @@
-package com.swyp.wedding.service;
+package com.swyp.wedding.service.schedule;
 
 import com.swyp.wedding.dto.schedule.ScheduleRequest;
 import com.swyp.wedding.dto.schedule.ScheduleResponse;
@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ScheduleService {
+public class  ScheduleService {
 
     private final UserRepository userRepository;
     private final ScheduleRepository scheduleRepository;
@@ -111,4 +111,3 @@ public class ScheduleService {
     }
 
 }
-
