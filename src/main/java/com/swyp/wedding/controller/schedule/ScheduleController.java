@@ -6,7 +6,7 @@ import com.swyp.wedding.dto.schedule.ScheduleMonthResponse;
 import com.swyp.wedding.dto.schedule.ScheduleWeekResponse;
 import com.swyp.wedding.global.response.ApiResponse;
 import com.swyp.wedding.security.user.CustomUserDetails;
-import com.swyp.wedding.service.ScheduleService;
+import com.swyp.wedding.service.schedule.ScheduleService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

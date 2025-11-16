@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class    SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final JwtProvider jwtProvider;
@@ -76,9 +76,17 @@ public class SecurityConfig {
                                 "/webjars/**",
                                 "/swagger-ui.html"
                         ).permitAll()
-                        // 인증이 필요없는 경로 (구체적인 경로부터 먼저)
-                        .requestMatchers("/api/user/join", "/api/user/join/oAuth/extra-info").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
+                        // OAuth 추가정보 입력 API (로그인 후 접근)
+                        .requestMatchers("/api/user/join/oAuth/extra-info").authenticated()
+                        // 인증이 필요없는 경로
+                        .requestMatchers(
+                                "/api/user/join",
+                                "/api/user/email-auth",
+                                "/api/user/email-auth/verify",
+                                "/api/user/password/reset",
+                                "/api/auth/login",
+                                "/api/auth/oauth/**"
+                        ).permitAll()
                         .requestMatchers("/", "/home", "/logout").permitAll()
                         // 조회 API (GET) - 인증 불필요
                         .requestMatchers(
@@ -91,7 +99,7 @@ public class SecurityConfig {
                         ).permitAll()
                         // TODO 관리자의 경우
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        // 로그인한 유저의 경우 (더 구체적인 경로를 뒤에 배치)
+                        // 로그인한 유저의 경우
                         .requestMatchers("/api/user/**", "/api/schedule/**").hasRole("USER")
                         .anyRequest().authenticated());
 

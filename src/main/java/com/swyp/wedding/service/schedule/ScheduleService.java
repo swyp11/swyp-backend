@@ -1,4 +1,4 @@
-package com.swyp.wedding.service;
+package com.swyp.wedding.service.schedule;
 
 import com.swyp.wedding.dto.schedule.ScheduleRequest;
 import com.swyp.wedding.dto.schedule.ScheduleResponse;
@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ScheduleService {
+public class  ScheduleService {
 
     private final UserRepository userRepository;
     private final ScheduleRepository scheduleRepository;
@@ -51,7 +51,7 @@ public class ScheduleService {
         LocalDate searchStart = LocalDate.of(year, month, 1);
         LocalDate searchEnd = searchStart.withDayOfMonth(searchStart.lengthOfMonth());
         return scheduleRepository.findByUser_UserIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
-                username, searchEnd, searchStart)
+                        username, searchEnd, searchStart)
                 .stream()
                 .map(ScheduleMonthResponse::fromEntity)
                 .toList();
@@ -64,7 +64,7 @@ public class ScheduleService {
         LocalDate searchStart = startDate;
         LocalDate searchEnd = startDate.plusDays(6);
         return scheduleRepository.findByUser_UserIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
-                username, searchEnd, searchStart)
+                        username, searchEnd, searchStart)
                 .stream()
                 .map(ScheduleWeekResponse::fromEntity)
                 .toList();
@@ -74,7 +74,7 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public List<ScheduleResponse> getDayEvents(String username, LocalDate date) {
         return scheduleRepository.findByUser_UserIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
-                username, date, date)
+                        username, date, date)
                 .stream()
                 .map(ScheduleResponse::fromEntity)
                 .toList();
@@ -111,4 +111,3 @@ public class ScheduleService {
     }
 
 }
-

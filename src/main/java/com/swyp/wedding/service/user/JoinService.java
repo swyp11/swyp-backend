@@ -1,11 +1,13 @@
-package com.swyp.wedding.service;
+package com.swyp.wedding.service.user;
 
 import com.swyp.wedding.dto.auth.OAuthExtraInfoRequest;
 import com.swyp.wedding.dto.user.UserRequest;
 import com.swyp.wedding.dto.user.UserResponse;
+import com.swyp.wedding.entity.user.AuthPurpose;
 import com.swyp.wedding.entity.user.User;
 import com.swyp.wedding.entity.user.UserEnum;
 import com.swyp.wedding.repository.user.UserRepository;
+import com.swyp.wedding.security.jwt.JwtUtil;
 import com.swyp.wedding.security.user.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,62 +20,39 @@ public class JoinService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final JwtUtil jwtUtil;
 
-    public String JoinProcess(UserRequest userRequest){
+    @Transactional
+    public void joinProcess(UserRequest userRequest){
 
-        //중복 가입 확인 (전화번호가 제공된 경우에만)
-        if(userRequest.getPhoneNumber() != null &&
-           userRepository.existsByPhoneNumber(userRequest.getPhoneNumber())){
-            throw new IllegalArgumentException("이미 가입한 전화번호입니다.");
+        // 1. 이메일 인증 토큰 검증
+        if (!jwtUtil.verifyEmailVerificationToken(
+                userRequest.getVerificationToken(),
+                userRequest.getUserId(),
+                AuthPurpose.SIGNUP.name())) {
+            throw new IllegalStateException("이메일 인증이 완료되지 않았거나 토큰이 만료되었습니다.");
         }
 
-        //회원 userId 중복확인
+        // 2. userId(아이디 = 이메일) 중복 확인
         if(userRepository.existsByUserId(userRequest.getUserId())){
-            throw new IllegalArgumentException("해당 아이디가 이미 존재합니다.");
+            throw new IllegalStateException("해당 아이디가 이미 존재합니다.");
         }
 
-        //회원 email 중복확인
-        if(userRepository.existsByUserId(userRequest.getEmail())){
-            throw new IllegalArgumentException("해당 이메일이 이미 존재합니다.");
-        }
-
-        //비밀번호 검증
-        if(!isValidPassword(userRequest.getPassword())){
-            throw new IllegalArgumentException("비밀번호는 문자 + 숫자 8~12자를 충족해야합니다.");
-        }
-
-
-        //비밀번호 암호화
+        // 3. 비밀번호 암호화
         String encodedPassword = bCryptPasswordEncoder.encode(userRequest.getPassword());
 
-        //User 객체 생성
+        // 4. User 객체 생성
         User user = User.builder()
-                .userId(userRequest.getUserId())
+                .userId(userRequest.getUserId()) // ID = EMAIL
                 .password(encodedPassword)
                 .nickname(userRequest.getNickname())
-                .email(userRequest.getEmail())
-                .phoneNumber(userRequest.getPhoneNumber())
-                .address(userRequest.getAddress())
                 .birth(userRequest.getBirth())
                 .weddingDate(userRequest.getWeddingDate())
                 .weddingRole(userRequest.getWeddingRole())
                 .auth(UserEnum.USER)
                 .build();
 
-
-        //중복이 없을 경우
         userRepository.save(user);
-
-        return "회원가입이 완료되었습니다.";
-    }
-
-
-    //비밀번호 검증 로직
-    private boolean isValidPassword(String password) {
-        if (password == null) return false;
-        String regex = "^(?=.*[a-zA-Z])(?=.*\\d)[A-Za-z\\d]{8,12}$";
-        return password.matches(regex);
-
     }
 
     // OAuth 로그인/회원가입 시 추가정보 입력

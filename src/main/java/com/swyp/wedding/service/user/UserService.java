@@ -1,4 +1,4 @@
-package com.swyp.wedding.service;
+package com.swyp.wedding.service.user;
 
 import com.swyp.wedding.dto.user.UserResponse;
 import com.swyp.wedding.dto.user.UserUpdateRequest;
