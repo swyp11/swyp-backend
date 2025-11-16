@@ -173,7 +173,7 @@ public class  ScheduleService {
 //    }
 
     public List<ScheduleResponse> getNotifications(String username) {
-        List<Schedule> schedules = scheduleRepository.findByUser_UserId();
+        List<Schedule> schedules = scheduleRepository.findByUser_UserId(username);
         List<ScheduleResponse> result = new ArrayList<>();
 
         for (Schedule tmp : schedules) {
