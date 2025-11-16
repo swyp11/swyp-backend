@@ -4,7 +4,7 @@ package com.swyp.wedding.controller.user;
 import com.swyp.wedding.dto.auth.LoginRequest;
 import com.swyp.wedding.dto.auth.TokenResponse;
 import com.swyp.wedding.global.response.ApiResponse;
-import com.swyp.wedding.service.AuthService;
+import com.swyp.wedding.service.user.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "인증", description = "로그인 및 OAuth 인증 API")
 @RestController
-@RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final AuthService authService;

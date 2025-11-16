@@ -45,6 +45,7 @@ public class User {
     private String address;
 
 
+    // auth 이후 추가 데이터 업데이트 로직
     public void updateExtraInfo(OAuthExtraInfoRequest extraInfoRequest) {
         this.nickname = extraInfoRequest.getNickname();
         this.birth = getBirth();
@@ -75,5 +76,10 @@ public class User {
         if (address != null) {
             this.address = address;
         }
+    }
+
+    // 비밀번호 변경로직
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
     }
 }
