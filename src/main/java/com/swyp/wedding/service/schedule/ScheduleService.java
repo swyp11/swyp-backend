@@ -9,18 +9,29 @@ import com.swyp.wedding.entity.user.User;
 import com.swyp.wedding.repository.schedule.ScheduleRepository;
 import com.swyp.wedding.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class  ScheduleService {
 
     private final UserRepository userRepository;
     private final ScheduleRepository scheduleRepository;
+    private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
     // 이벤트 생성
     @Transactional
@@ -110,4 +121,75 @@ public class  ScheduleService {
         scheduleRepository.delete(schedule);
     }
 
+//    @Scheduled(cron = "0 * * * * *")
+//    @Transactional
+//    public void sendAlarms(String userId) {
+//        LocalDateTime now = LocalDateTime.now();
+//
+//        // 아직 알림 안 보낸 일정들
+//        List<Schedule> schedules = scheduleRepository.findByUser_UserIdAndNotifiedAtIsNull(userId);
+//
+//        schedules.stream()
+//                .filter(s -> isAlarmTime(now, s))
+//                .forEach(s -> {
+//                    // 1) 여기서 실제 알림 처리(추후 이메일/푸시 연동)
+//                    log.info("[SCHEDULE ALARM] userId={}, title='{}', start={}",
+//                            s.getUser().getId(), s.getTitle(), s.getEndTime());
+//
+//                    // 2) 알림 보냈다고 표시
+//                    s.markNotified();
+//                });
+//    }
+//
+//    private boolean isAlarmTime(LocalDateTime now, Schedule schedule) {
+//        LocalDateTime start = schedule.getStartDate().atTime(schedule.getStartTime());
+//        LocalDateTime notifyAt = start.minusMinutes(
+//                schedule.getNotifyBeforeMinutes() == null ? 10 : schedule.getNotifyBeforeMinutes()
+//        );
+//
+//        // 예: now 가 notifyAt ~ start 사이에 들어오면 알림
+//        return !now.isBefore(notifyAt) && !now.isAfter(start);
+//    }
+//
+//
+//    public SseEmitter subscribe(String userId) {
+//        SseEmitter emitter = new SseEmitter(0L);
+//
+//        emitters.put(userId, emitter);
+//
+//        emitter.onCompletion(() -> emitters.remove(userId));
+//        emitter.onTimeout(() -> emitters.remove(userId));
+//        emitter.onError(e -> emitters.remove(userId));
+//
+//        try {
+//            emitter.send(SseEmitter.event()
+//                    .name("connect")
+//                    .data("connected"));
+//        } catch (IOException e) {
+//            emitters.remove(userId);
+//        }
+//
+//        return emitter;
+//    }
+
+    public List<ScheduleResponse> getNotifications(String username) {
+        List<Schedule> schedules = scheduleRepository.findByUser_UserId(username);
+        List<ScheduleResponse> result = new ArrayList<>();
+
+        for (Schedule tmp : schedules) {
+            LocalDateTime st = tmp.getEndDate().atTime(tmp.getEndTime());
+            LocalDateTime now = LocalDateTime.now();
+
+            boolean isWithinOneDay =
+                    !st.isBefore(now) &&  // st >= now
+                            st.isBefore(now.plusDays(1)); // st < now + 1일
+
+            if (isWithinOneDay) {
+                result.add(ScheduleResponse.fromEntity(tmp));
+            }
+
+        }
+
+        return result;
+    }
 }

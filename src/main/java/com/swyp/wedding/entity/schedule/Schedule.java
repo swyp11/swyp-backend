@@ -48,11 +48,19 @@ public class Schedule {
     @JoinColumn(name = "user_id")
     private User user; // 로그인한 사용자 정보
 
+    @Builder.Default
+    private Integer notifyBeforeMinutes = 10;
+
+    private LocalDateTime notifiedAt;
+
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public void markNotified() {
+        this.notifiedAt = LocalDateTime.now();
+    }
 
     public void update(ScheduleRequest request){
         this.title = request.getTitle();
