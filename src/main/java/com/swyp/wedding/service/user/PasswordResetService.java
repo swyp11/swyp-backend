@@ -1,10 +1,9 @@
 package com.swyp.wedding.service.user;
 
 import com.swyp.wedding.entity.user.AuthPurpose;
-import com.swyp.wedding.entity.user.EmailAuthCode;
 import com.swyp.wedding.entity.user.User;
-import com.swyp.wedding.repository.user.EmailAuthCodeRepository;
 import com.swyp.wedding.repository.user.UserRepository;
+import com.swyp.wedding.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,35 +14,24 @@ import org.springframework.transaction.annotation.Transactional;
 public class PasswordResetService {
 
     private final UserRepository userRepository;
-    private final EmailAuthCodeRepository emailAuthCodeRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final AuthCodeService authCodeService;
+    private final JwtUtil jwtUtil;
 
-    // 인증 코드 전송
-    public void sendResetCode(String email) {
-        authCodeService.sendAuthCode(email, AuthPurpose.PASSWORD_RESET);
-    }
-
-    //  코드 검증
-    public boolean verifyResetCode(String email, String code) {
-        return authCodeService.verifyCode(email, code, AuthPurpose.PASSWORD_RESET);
-    }
-
-    // 비밀번호 변경
+    // 토큰 검증 후 비밀번호 변경
     @Transactional
-    public void updatePassword(String email, String newPassword) {
-        EmailAuthCode auth = emailAuthCodeRepository.findByEmailAndPurpose(email, AuthPurpose.PASSWORD_RESET)
-                .orElseThrow(() -> new IllegalStateException("인증 기록이 없습니다."));
+    public void resetPasswordWithToken(String email, String newPassword, String verificationToken) {
+        // 1. 이메일 인증 토큰 검증
+        if (!jwtUtil.verifyEmailVerificationToken(verificationToken, email, AuthPurpose.PASSWORD_RESET.name())) {
+            throw new IllegalStateException("이메일 인증이 완료되지 않았거나 토큰이 만료되었습니다.");
+        }
 
-        if (auth.isExpired()) throw new IllegalStateException("인증 코드가 만료되었습니다.");
-        if (!auth.isVerified()) throw new IllegalStateException("인증이 완료되지 않았습니다.");
-
-        User user = userRepository.findByUserId(email) // userId = email
+        // 2. 사용자 조회
+        User user = userRepository.findByUserId(email)
                 .orElseThrow(() -> new IllegalArgumentException("해당 이메일 계정을 찾을 수 없습니다."));
 
+        // 3. 비밀번호 변경
         user.updatePassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-
     }
 
 }
