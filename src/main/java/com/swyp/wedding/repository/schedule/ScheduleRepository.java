@@ -23,6 +23,6 @@ public interface ScheduleRepository extends JpaRepository <Schedule, Long>{
     Optional<Schedule> findByIdAndUser_UserId(Long id, String username);
 
     // 알림 보낼 일정 조회 (모든 사용자)
-    List<Schedule> findByUser_UserId();
+    List<Schedule> findByUser_UserId(String userId);
 
 }
