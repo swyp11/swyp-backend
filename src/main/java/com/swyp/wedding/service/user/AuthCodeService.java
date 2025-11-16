@@ -3,6 +3,7 @@ package com.swyp.wedding.service.user;
 import com.swyp.wedding.entity.user.AuthPurpose;
 import com.swyp.wedding.entity.user.EmailAuthCode;
 import com.swyp.wedding.repository.user.EmailAuthCodeRepository;
+import com.swyp.wedding.repository.user.UserRepository;
 import com.swyp.wedding.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,12 +17,24 @@ import java.util.UUID;
 public class AuthCodeService {
 
     private final EmailAuthCodeRepository emailAuthCodeRepository;
+    private final UserRepository userRepository;
     private final MailService mailService;
     private final JwtUtil jwtUtil;
 
     // 인증 코드 전송
     @Transactional
     public void sendAuthCode(String email, AuthPurpose purpose) {
+        // 목적에 따른 사용자 존재 여부 검증
+        boolean userExists = userRepository.existsByUserId(email);
+
+        if (purpose == AuthPurpose.SIGNUP && userExists) {
+            throw new IllegalStateException("이미 가입된 이메일입니다.");
+        }
+
+        if (purpose == AuthPurpose.PASSWORD_RESET && !userExists) {
+            throw new IllegalStateException("가입되지 않은 이메일입니다.");
+        }
+
         String code = generateCode();
 
         // 기존 코드 삭제 (중복 방지)
