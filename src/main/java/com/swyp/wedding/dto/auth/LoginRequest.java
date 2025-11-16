@@ -7,6 +7,6 @@ import lombok.Getter;
 @Schema(description = "기본 로그인을 위한 request")
 public class LoginRequest {
 
-    private String userId;
+    private String userId; // userId = email
     private String password;
 }
