@@ -44,6 +44,7 @@ public class JoinService {
         // 4. User 객체 생성
         User user = User.builder()
                 .userId(userRequest.getUserId()) // ID = EMAIL
+                .email(userRequest.getUserId())  // 이메일도 동일하게 저장
                 .password(encodedPassword)
                 .nickname(userRequest.getNickname())
                 .birth(userRequest.getBirth())
