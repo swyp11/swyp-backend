@@ -6,16 +6,22 @@ import com.swyp.wedding.dto.schedule.ScheduleMonthResponse;
 import com.swyp.wedding.dto.schedule.ScheduleWeekResponse;
 import com.swyp.wedding.global.response.ApiResponse;
 import com.swyp.wedding.security.user.CustomUserDetails;
+
 import com.swyp.wedding.service.schedule.ScheduleService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+
+import org.springframework.http.MediaType;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Tag(name = "일정", description = "결혼 준비 일정 관리 API")
 @RestController
@@ -86,5 +92,13 @@ public class ScheduleController {
             @PathVariable Long id) {
         scheduleService.deleteEvent(userDetails.getUsername(),id);
         return ResponseEntity.ok(ApiResponse.success());
+    }
+
+    @Schema(description = "알림 기능")
+    @GetMapping(value = "/notifications", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public ResponseEntity<ApiResponse<List<ScheduleResponse>>> getNotifications(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        List<ScheduleResponse> response = scheduleService.getNotifications(userDetails.getUsername());
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 }

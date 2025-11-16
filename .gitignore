@@ -39,9 +39,6 @@ out/
 #application-oauth2.yml
 src/main/resources/application-oauth2.yml
 /application-oauth2.yml
-
-# IDE lock / backup files
-*.LCK*
-*~
+*.yml
 
 .env
