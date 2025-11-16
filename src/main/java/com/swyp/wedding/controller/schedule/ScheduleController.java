@@ -95,7 +95,7 @@ public class ScheduleController {
     }
 
     @Schema(description = "알림 기능")
-    @GetMapping(value = "/notifications", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/notifications")
     public ResponseEntity<ApiResponse<List<ScheduleResponse>>> getNotifications(
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         List<ScheduleResponse> response = scheduleService.getNotifications(userDetails.getUsername());
