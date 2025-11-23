@@ -139,4 +139,12 @@ public class DressService {
                 .map(DressResponse::from)
                 .collect(Collectors.toList());
     }
+
+    public List<DressResponse> getDressesByShopId(Long shopId) {
+        List<Dress> dresses;
+        dresses = dressRepository.findByDressShopId(shopId);
+        return dresses.stream()
+                .map(DressResponse::from)
+                .collect(Collectors.toList());
+    }
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.swyp.wedding.dto.dress.DressResponse;
 import com.swyp.wedding.dto.dressshop.DressShopRequest;
 import com.swyp.wedding.dto.dressshop.DressShopResponse;
 import com.swyp.wedding.entity.common.SortType;
@@ -101,6 +102,13 @@ public class DressShopController {
         List<com.swyp.wedding.dto.dress.DressResponse> dresses =
             dressService.getDressesByShopName(dressShop.getShopName());
 
+        return ResponseEntity.ok(ApiResponse.success(dresses));
+    }
+
+    @GetMapping("/{shopId}/dresses-2")
+    public ResponseEntity<ApiResponse<List<DressResponse>>> getShopDresses(@PathVariable Long shopId) {
+        // 샵의 드레스 목록만 반환
+        List<DressResponse> dresses = dressService.getDressesByShopId(shopId);
         return ResponseEntity.ok(ApiResponse.success(dresses));
     }
 }
