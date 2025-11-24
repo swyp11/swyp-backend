@@ -105,6 +105,7 @@ public class DressShopController {
         return ResponseEntity.ok(ApiResponse.success(dresses));
     }
 
+    @Operation(summary = "샵의 드레스 상세 목록 조회", description = "특정 드레스샵에 등록된 모든 드레스의 상세 정보를 조회합니다.")
     @GetMapping("/{shopId}/dresses/detail")
     public ResponseEntity<ApiResponse<List<DressResponse>>> getShopDresses(@PathVariable Long shopId) {
         // 샵의 드레스 목록만 반환
