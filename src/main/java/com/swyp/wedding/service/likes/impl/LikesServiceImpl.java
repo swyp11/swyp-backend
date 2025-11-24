@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.swyp.wedding.dto.dressshop.DressShopResponse;
 import com.swyp.wedding.dto.likes.LikesResponse;
@@ -79,6 +80,30 @@ public class LikesServiceImpl implements LikesService {
             likesRepository.deleteById(id);
             return true;
         } catch (DataIntegrityViolationException e) {
+            return false;
+        }
+    }
+
+    // category와 postId로 찜 취소
+    @Override
+    @Transactional
+    public boolean deleteLikesByPost(String category, Long postId, String userId) {
+        try {
+            User user = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+            LikesType likesType = switch (category.toLowerCase()) {
+                case "hall" -> LikesType.HALL;
+                case "wedding_hall" -> LikesType.WEDDING_HALL;
+                case "dress" -> LikesType.DRESS;
+                case "dress_shop" -> LikesType.DRESS_SHOP;
+                case "makeup_shop" -> LikesType.MAKEUP_SHOP;
+                default -> throw new IllegalArgumentException("지원하지 않는 카테고리입니다: " + category);
+            };
+
+            likesRepository.deleteByUserAndLikesTypeAndTargetId(user, likesType, postId);
+            return true;
+        } catch (Exception e) {
             return false;
         }
     }

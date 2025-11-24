@@ -32,5 +32,8 @@ public interface LikesRepository extends JpaRepository<Likes, Long> {
 
     // 특정 사용자의 카테고리별 찜 목록 조회
     List<Likes> findByUserAndLikesTypeOrderByUpdateDtDesc(User user, LikesType likesType);
+
+    // 특정 사용자의 특정 게시물 찜 삭제
+    void deleteByUserAndLikesTypeAndTargetId(User user, LikesType likesType, Long targetId);
 }
 

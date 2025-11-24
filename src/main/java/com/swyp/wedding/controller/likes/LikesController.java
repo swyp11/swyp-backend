@@ -38,12 +38,13 @@ public class LikesController {
         return ResponseEntity.ok(ApiResponse.success());
     }
 
-    @Operation(summary = "사용자가 특정 게시물 좋아요(찜)를 제거합니다.")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteLikes(@PathVariable Long id,
-                                                          @AuthenticationPrincipal CustomUserDetails userDetails) {
-        // 추후 계정 없는 것에 대한 예외처리 기능 만들 예정 (고도화 때)
-        likesService.deleteLikes(id);
+    @Operation(summary = "사용자가 특정 게시물 좋아요(찜)를 제거합니다. (category, postId 기반)")
+    @DeleteMapping("/{category}/{postId}")
+    public ResponseEntity<ApiResponse<Void>> deleteLikesByPost(@PathVariable String category,
+                                                                @PathVariable Long postId,
+                                                                @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String userId = userDetails.getUsername();
+        likesService.deleteLikesByPost(category, postId, userId);
         return ResponseEntity.ok(ApiResponse.success());
     }
 
