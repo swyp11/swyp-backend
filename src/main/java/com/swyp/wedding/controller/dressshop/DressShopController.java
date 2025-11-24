@@ -105,7 +105,7 @@ public class DressShopController {
         return ResponseEntity.ok(ApiResponse.success(dresses));
     }
 
-    @GetMapping("/{shopId}/dresses-2")
+    @GetMapping("/{shopId}/dresses/detail")
     public ResponseEntity<ApiResponse<List<DressResponse>>> getShopDresses(@PathVariable Long shopId) {
         // 샵의 드레스 목록만 반환
         List<DressResponse> dresses = dressService.getDressesByShopId(shopId);
