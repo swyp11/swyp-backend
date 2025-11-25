@@ -1,6 +1,7 @@
 package com.swyp.wedding.repository.likes;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -35,5 +36,8 @@ public interface LikesRepository extends JpaRepository<Likes, Long> {
 
     // 특정 사용자의 특정 게시물 찜 삭제
     void deleteByUserAndLikesTypeAndTargetId(User user, LikesType likesType, Long targetId);
+
+    // 특정 사용자의 특정 게시물 찜 조회
+    Optional<Likes> findByUserAndLikesTypeAndTargetId(User user, LikesType likesType, Long targetId);
 }
 

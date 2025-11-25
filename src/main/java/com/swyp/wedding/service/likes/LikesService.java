@@ -1,9 +1,9 @@
 package com.swyp.wedding.service.likes;
 
-import com.swyp.wedding.dto.weddinghall.WeddingHallRequest;
+import com.swyp.wedding.dto.likes.LikesResponse;
 
 public interface LikesService {
-    boolean storeLikes(String likesType, Long postId, String userId);
+    LikesResponse storeLikes(String likesType, Long postId, String userId);
     boolean deleteLikes(Long id);
-    boolean deleteLikesByPost(String category, Long postId, String userId);
+    LikesResponse deleteLikesByPost(String category, Long postId, String userId);
 }

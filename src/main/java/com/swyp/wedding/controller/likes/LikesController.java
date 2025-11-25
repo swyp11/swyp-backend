@@ -31,21 +31,21 @@ public class LikesController {
 
     @Operation(summary = "사용자가 특정 게시물 좋아요(찜)를 누릅니다.")
     @PostMapping("/{category}/{postId}")
-    public ResponseEntity<ApiResponse<Void>> storeLikes(@PathVariable String category, @PathVariable Long postId,
+    public ResponseEntity<ApiResponse<LikesResponse>> storeLikes(@PathVariable String category, @PathVariable Long postId,
                                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
         String userId = userDetails.getUsername();
-        likesService.storeLikes(category, postId, userId);
-        return ResponseEntity.ok(ApiResponse.success());
+        LikesResponse response = likesService.storeLikes(category, postId, userId);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @Operation(summary = "사용자가 특정 게시물 좋아요(찜)를 제거합니다. (category, postId 기반)")
     @DeleteMapping("/{category}/{postId}")
-    public ResponseEntity<ApiResponse<Void>> deleteLikesByPost(@PathVariable String category,
+    public ResponseEntity<ApiResponse<LikesResponse>> deleteLikesByPost(@PathVariable String category,
                                                                 @PathVariable Long postId,
                                                                 @AuthenticationPrincipal CustomUserDetails userDetails) {
         String userId = userDetails.getUsername();
-        likesService.deleteLikesByPost(category, postId, userId);
-        return ResponseEntity.ok(ApiResponse.success());
+        LikesResponse response = likesService.deleteLikesByPost(category, postId, userId);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @Operation(summary = "사용자의 모든 찜 목록 조회",
