@@ -87,8 +87,7 @@ public class WeddingApiController {
 
     @Operation(summary = "웨딩홀의 홀 상세 목록 조회", description = "웨딩홀에 등록된 홀의 상세 정보를 조회합니다.")
     @GetMapping("/{weddingHallId}/halls")
-    public ResponseEntity<ApiResponse<List<HallResponse>>> getShopDresses(@PathVariable Long weddingHallId) {
-        // 샵의 드레스 목록만 반환
+    public ResponseEntity<ApiResponse<List<HallResponse>>> getHallsByWeddingHall(@PathVariable Long weddingHallId) {
         List<HallResponse> hallLists = hallService.getHallByWeddingHallId(weddingHallId);
         return ResponseEntity.ok(ApiResponse.success(hallLists));
     }
