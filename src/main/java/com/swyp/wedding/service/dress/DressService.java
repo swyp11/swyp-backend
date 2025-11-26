@@ -141,6 +141,7 @@ public class DressService {
     }
 
     public List<DressResponse> getDressesByShopId(Long shopId) {
+
         List<Dress> dresses;
         dresses = dressRepository.findByDressShopId(shopId);
         return dresses.stream()
