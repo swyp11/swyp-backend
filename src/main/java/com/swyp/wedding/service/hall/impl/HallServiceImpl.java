@@ -80,6 +80,7 @@ public class HallServiceImpl implements HallService {
                             request.getDescription(),
                             existing.getRegDt(),  // 기존 등록일 유지
                             null,
+                            null,
                             null  // updateDt는 @PreUpdate에서 자동 설정
                     );
                     hallRepository.save(updated);
