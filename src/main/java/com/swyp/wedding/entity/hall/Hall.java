@@ -77,6 +77,8 @@ public class Hall {
     @JoinColumn(name = "wedding_hall_id")
     private WeddingHall weddingHall;
 
+    private String imageUrl;
+
     // 생성 시 자동으로 시간 설정
     @PrePersist
     protected void onCreate() {
