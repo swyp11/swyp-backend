@@ -11,15 +11,13 @@ import java.util.List;
 
 @Repository
 public interface DressRepository extends JpaRepository<Dress, Long> {
-    
-    // shopName으로 드레스들 조회 (정확한 이름) - DressShopController에서 사용
-    List<Dress> findByShopName(String shopName);
-    
-    // shopName으로 드레스들 조회 (부분 일치)
-    List<Dress> findByShopNameContainingIgnoreCase(String shopName);
-    
+
+    // dressShopId로 드레스들 조회
+    List<Dress> findByDressShopId(Long dressShopId);
+
+    // dressShop의 shopName으로 드레스들 조회 (부분 일치)
+    List<Dress> findByDressShop_ShopNameContainingIgnoreCase(String shopName);
+
     // 등록일 기준 최신순으로 전체 드레스 조회
     List<Dress> findAllByOrderByRegDtDesc();
-
-    List<Dress> findByDressShopId(Long shopId);
 }

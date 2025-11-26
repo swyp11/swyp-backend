@@ -55,8 +55,10 @@ public class Dress {
     @Column(name = "season", length = 50)
     private DressEnum.Season season;
 
-    @Column(name = "shop_name", length = 100, nullable = false)
-    private String shopName;  // DressShop의 shopName과 연결
+    // shopName은 dressShop에서 가져옴
+    public String getShopName() {
+        return dressShop != null ? dressShop.getShopName() : null;
+    }
 
     @Column(name = "designer", length = 50)
     private String designer;
@@ -89,7 +91,7 @@ public class Dress {
     private LocalDateTime updateDt;
 
     @ManyToOne
-    @JoinColumn(name = "dress_shop_id")
+    @JoinColumn(name = "dress_shop_id", nullable = false)
     private DressShop dressShop;
 
     // 생성 시 자동으로 시간 설정

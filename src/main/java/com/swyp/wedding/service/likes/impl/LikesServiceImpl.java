@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.swyp.wedding.dto.dressshop.DressShopResponse;
 import com.swyp.wedding.dto.likes.LikesResponse;
@@ -39,33 +40,28 @@ public class LikesServiceImpl implements LikesService {
 
     // 해당 찜 누를 시, 좋아요 저장된다.
     @Override
-    public boolean storeLikes(String category, Long postId, String userId) {
+    public LikesResponse storeLikes(String category, Long postId, String userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        try {
-            User user = userRepository.findByUserId(userId).get();
-            LikesType likesType = null;
+        LikesType likesType = switch (category.toLowerCase()) {
+            case "hall" -> LikesType.HALL;
+            case "wedding_hall" -> LikesType.WEDDING_HALL;
+            case "dress" -> LikesType.DRESS;
+            case "dress_shop" -> LikesType.DRESS_SHOP;
+            case "makeup_shop" -> LikesType.MAKEUP_SHOP;
+            default -> throw new IllegalArgumentException("지원하지 않는 카테고리입니다: " + category);
+        };
 
-            switch (category) {
-                case "hall" -> likesType = LikesType.HALL;
-                case "wedding_hall" -> likesType = LikesType.WEDDING_HALL;
-                case "dress" -> likesType = LikesType.DRESS;
-                case "dress_shop" -> likesType = LikesType.DRESS_SHOP;
-                case "makeup_shop" -> likesType = LikesType.MAKEUP_SHOP;
-                default -> throw new IllegalArgumentException("지원하지 않는 카테고리입니다: " + category);
-            }
+        Likes likes = Likes.builder()
+                .user(user)
+                .likesType(likesType)
+                .targetId(postId)
+                .build();
 
-            Likes likes = Likes.builder()
-                    .user(user)
-                    .likesType(likesType)
-                    .targetId(postId)
-                    .build();
+        Likes savedLikes = likesRepository.save(likes);
 
-            likesRepository.save(likes);
-
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        return mapToLikesResponseWithDetails(savedLikes);
     }
 
     // 해당 찜 취소
@@ -81,6 +77,32 @@ public class LikesServiceImpl implements LikesService {
         } catch (DataIntegrityViolationException e) {
             return false;
         }
+    }
+
+    // category와 postId로 찜 취소
+    @Override
+    @Transactional
+    public LikesResponse deleteLikesByPost(String category, Long postId, String userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        LikesType likesType = switch (category.toLowerCase()) {
+            case "hall" -> LikesType.HALL;
+            case "wedding_hall" -> LikesType.WEDDING_HALL;
+            case "dress" -> LikesType.DRESS;
+            case "dress_shop" -> LikesType.DRESS_SHOP;
+            case "makeup_shop" -> LikesType.MAKEUP_SHOP;
+            default -> throw new IllegalArgumentException("지원하지 않는 카테고리입니다: " + category);
+        };
+
+        Likes likes = likesRepository.findByUserAndLikesTypeAndTargetId(user, likesType, postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 찜을 찾을 수 없습니다."));
+
+        LikesResponse response = LikesResponse.from(likes);
+
+        likesRepository.deleteByUserAndLikesTypeAndTargetId(user, likesType, postId);
+
+        return response;
     }
 
     // 사용자의 모든 찜 목록 조회

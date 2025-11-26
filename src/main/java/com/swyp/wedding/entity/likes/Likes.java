@@ -22,7 +22,7 @@ public class Likes {
 
     @Comment("찜을 한 카테고리 유형")
     @Enumerated(EnumType.STRING)
-    @Column(name = "likes_type")
+    @Column(name = "likes_type", length = 20)
     private LikesType likesType;
 
     @Comment("해당 카테고리 식별자")

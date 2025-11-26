@@ -31,20 +31,21 @@ public class LikesController {
 
     @Operation(summary = "사용자가 특정 게시물 좋아요(찜)를 누릅니다.")
     @PostMapping("/{category}/{postId}")
-    public ResponseEntity<ApiResponse<Void>> storeLikes(@PathVariable String category, @PathVariable Long postId,
+    public ResponseEntity<ApiResponse<LikesResponse>> storeLikes(@PathVariable String category, @PathVariable Long postId,
                                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
         String userId = userDetails.getUsername();
-        likesService.storeLikes(category, postId, userId);
-        return ResponseEntity.ok(ApiResponse.success());
+        LikesResponse response = likesService.storeLikes(category, postId, userId);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    @Operation(summary = "사용자가 특정 게시물 좋아요(찜)를 제거합니다.")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteLikes(@PathVariable Long id,
-                                                          @AuthenticationPrincipal CustomUserDetails userDetails) {
-        // 추후 계정 없는 것에 대한 예외처리 기능 만들 예정 (고도화 때)
-        likesService.deleteLikes(id);
-        return ResponseEntity.ok(ApiResponse.success());
+    @Operation(summary = "사용자가 특정 게시물 좋아요(찜)를 제거합니다. (category, postId 기반)")
+    @DeleteMapping("/{category}/{postId}")
+    public ResponseEntity<ApiResponse<LikesResponse>> deleteLikesByPost(@PathVariable String category,
+                                                                @PathVariable Long postId,
+                                                                @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String userId = userDetails.getUsername();
+        LikesResponse response = likesService.deleteLikesByPost(category, postId, userId);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @Operation(summary = "사용자의 모든 찜 목록 조회",
