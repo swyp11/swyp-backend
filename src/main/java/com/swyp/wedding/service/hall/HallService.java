@@ -13,4 +13,5 @@ public interface HallService {
     HallResponse getHallInfo(Long id);
     boolean updateHall(HallRequest request);
     boolean deleteHall(Long id);
+    List<HallResponse> getHallByWeddingHallId(Long weddingHallId);
 }

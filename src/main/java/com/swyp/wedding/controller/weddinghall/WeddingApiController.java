@@ -2,8 +2,11 @@ package com.swyp.wedding.controller.weddinghall;
 
 import java.util.List;
 
+import com.swyp.wedding.dto.dress.DressResponse;
+import com.swyp.wedding.dto.hall.HallResponse;
 import com.swyp.wedding.global.response.ApiResponse;
 import com.swyp.wedding.security.user.CustomUserDetails;
+import com.swyp.wedding.service.hall.impl.HallServiceImpl;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class WeddingApiController {
 
     private final WeddingHallServiceImpl weddingHallService;
+    private final HallServiceImpl hallService;
 
     @Operation(summary = "웨딩홀 리스트를 조회합니다.",
                description = "정렬 기준: RECENT(최신순), FAVORITE(인기순). 기본값은 최신순입니다. 로그인 시 찜 정보(isLiked)가 포함됩니다.")
@@ -79,5 +83,13 @@ public class WeddingApiController {
     public ResponseEntity<ApiResponse<List<WeddingHallResponse>>> searchWeddings(@RequestParam String keyword) {
         List<WeddingHallResponse> results = weddingHallService.searchWeddings(keyword);
         return ResponseEntity.ok(ApiResponse.success(results));
+    }
+
+    @Operation(summary = "웨딩홀의 홀 상세 목록 조회", description = "웨딩홀에 등록된 홀의 상세 정보를 조회합니다.")
+    @GetMapping("/{weddingHallId}/halls")
+    public ResponseEntity<ApiResponse<List<HallResponse>>> getShopDresses(@PathVariable Long weddingHallId) {
+        // 샵의 드레스 목록만 반환
+        List<HallResponse> hallLists = hallService.getHallByWeddingHallId(weddingHallId);
+        return ResponseEntity.ok(ApiResponse.success(hallLists));
     }
 }

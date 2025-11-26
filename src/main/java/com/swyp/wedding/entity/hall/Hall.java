@@ -2,10 +2,15 @@ package com.swyp.wedding.entity.hall;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import org.hibernate.annotations.Comment;
+
+import com.swyp.wedding.entity.dressshop.DressShop;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import com.swyp.wedding.entity.weddinghall.WeddingHall;
 
 @Builder
 @AllArgsConstructor
@@ -67,6 +72,10 @@ public class Hall {
 
     @Comment("업데이트 일자")
     private LocalDateTime updateDt;
+
+    @ManyToOne
+    @JoinColumn(name = "wedding_hall_id")
+    private WeddingHall weddingHall;
 
     // 생성 시 자동으로 시간 설정
     @PrePersist
