@@ -93,7 +93,7 @@ public class DressShopController {
 
     @Operation(summary = "샵의 드레스 목록 조회", description = "특정 드레스샵에 등록된 모든 드레스를 조회합니다.")
     @GetMapping("/{id}/dresses")
-    public ResponseEntity<ApiResponse<List<com.swyp.wedding.dto.dress.DressResponse>>> getDressesByShop(
+    public ResponseEntity<ApiResponse<List<DressResponse>>> getDressesByShop(
             @Parameter(description = "드레스샵 ID", required = true) @PathVariable Long id) {
         // 1. 먼저 해당 ID의 DressShop을 조회하여 shop_name을 가져옴 (찜 정보는 불필요하므로 null 전달)
         DressShopResponse dressShop = dressShopService.getDressShopById(id, null);
@@ -110,6 +110,7 @@ public class DressShopController {
     public ResponseEntity<ApiResponse<List<DressResponse>>> getShopDresses(@PathVariable Long shopId) {
         // 샵의 드레스 목록만 반환
         List<DressResponse> dresses = dressService.getDressesByShopId(shopId);
+        List<DressResponse> dresses = dressService.getDressesByShopId(id);
         return ResponseEntity.ok(ApiResponse.success(dresses));
     }
 }
