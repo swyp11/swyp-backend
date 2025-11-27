@@ -37,8 +37,8 @@ public class DressShopController {
     private final DressShopService dressShopService;
     private final DressService dressService;
 
-    @Operation(summary = "드레스샵 목록 조회", 
-               description = "드레스샵 목록을 조회합니다. 파라미터로 검색 및 정렬 옵션을 지정할 수 있습니다. 여러 조건을 동시에 사용 가능합니다.")
+    @Operation(summary = "드레스샵 목록 조회",
+            description = "드레스샵 목록을 조회합니다. 파라미터로 검색 및 정렬 옵션을 지정할 수 있습니다. 여러 조건을 동시에 사용 가능합니다.")
     @GetMapping
     public ResponseEntity<ApiResponse<List<DressShopResponse>>> getAllDressShops(
             @Parameter(description = "샵 이름 (부분 일치 검색)") @RequestParam(required = false) String shopName,
@@ -95,21 +95,6 @@ public class DressShopController {
     @GetMapping("/{id}/dresses")
     public ResponseEntity<ApiResponse<List<DressResponse>>> getDressesByShop(
             @Parameter(description = "드레스샵 ID", required = true) @PathVariable Long id) {
-        // 1. 먼저 해당 ID의 DressShop을 조회하여 shop_name을 가져옴 (찜 정보는 불필요하므로 null 전달)
-        DressShopResponse dressShop = dressShopService.getDressShopById(id, null);
-
-        // 2. shop_name으로 Dress 목록 조회
-        List<com.swyp.wedding.dto.dress.DressResponse> dresses =
-            dressService.getDressesByShopName(dressShop.getShopName());
-
-        return ResponseEntity.ok(ApiResponse.success(dresses));
-    }
-
-    @Operation(summary = "샵의 드레스 상세 목록 조회", description = "특정 드레스샵에 등록된 모든 드레스의 상세 정보를 조회합니다.")
-    @GetMapping("/{shopId}/dresses/detail")
-    public ResponseEntity<ApiResponse<List<DressResponse>>> getShopDresses(@PathVariable Long shopId) {
-        // 샵의 드레스 목록만 반환
-        List<DressResponse> dresses = dressService.getDressesByShopId(shopId);
         List<DressResponse> dresses = dressService.getDressesByShopId(id);
         return ResponseEntity.ok(ApiResponse.success(dresses));
     }
