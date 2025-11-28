@@ -25,6 +25,7 @@ public class HallResponse {
     private boolean pillar;
     private boolean status;
     private String desc;
+    private String imageUrl;
     private LocalDateTime regDt;
     private LocalDateTime updateDt;
 
@@ -46,6 +47,7 @@ public class HallResponse {
         response.setPillar(hall.isPillar());
         response.setStatus(hall.isStatus());
         response.setDesc(hall.getDescription());
+        response.setImageUrl(hall.getImageUrl());
         response.setRegDt(hall.getRegDt());
         response.setUpdateDt(hall.getUpdateDt());
 
